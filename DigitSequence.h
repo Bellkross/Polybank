@@ -3,70 +3,107 @@
 #include <exception>
 #include <iostream>
 
-/*
- * Class for card number and pin representation
- * size always > 0
- */
+/**
+* Class for card number and pin representation
+* size must be more than 0
+* digit bounds: [0;9]
+*/
 template <size_t size>
 class DigitSequence
 {
-	// friend function only for tests
-	friend class Tester;
+	friend class Tester; // friend class only for tests
 private:
 	unsigned short* _numbers;
 
 public:
-
-	DigitSequence(): _numbers(new unsigned short[size])
-	{
-		if( size < 1)
-			throw std::logic_error("Incorrect size error");
-
-		for(int i = 0; i < size; i++)
-			_numbers[i] = 0;
-	}
-
-	// Copying constructor
-	DigitSequence(const DigitSequence<size>& ds): _numbers(new unsigned short[size])
-	{
-		for(int i = 0; i < size; i++)
-			_numbers[i] = ds.get(i);
-	}
-
-	// Assignment operator
-	DigitSequence<size>& operator=(const DigitSequence<size>& ds)
-	{
-		if(_numbers == ds._numbers)
-			return *this;
-		for(int i = 0; i < size; i++)
-			_numbers[i] = ds.get(i);
-		return *this;
-	}
-
-	~DigitSequence()
-	{
-		delete[] _numbers;
-	}
-
-	// We need setter, because we have to control input digits
-	void set(const size_t i, const unsigned short digit)
-	{
-		if(i >= size)
-			throw std::out_of_range("Index more or equals than size");
-		if(digit > 9)
-			throw std::invalid_argument("Incorrect digit value");
-
-		_numbers[i] = digit;
-	}
-
-	// If we have setter - let's create getter
-	unsigned short get(const size_t i) const
-	{
-		if(i >= size)
-			throw std::out_of_range("Index more or equals than size");
-		return _numbers[i];
-	}
+	DigitSequence();
+	DigitSequence(const char* numbers);
+	DigitSequence(const unsigned short* numbers);
+	DigitSequence(const DigitSequence<size>& ds); // Copying constructor
+	DigitSequence<size>& operator=(const DigitSequence<size>& ds); // Assignment operator
+	~DigitSequence();
+	void set(const size_t i, const unsigned short digit); // We need setter, because we have to control input digits
+	unsigned short get(const size_t i) const; // Add getter in pair with the necessary setter instead of operator[]
 };
+
+/* Digit Sequence implementation */
+
+template <size_t size>
+DigitSequence<size>::DigitSequence(): _numbers(new unsigned short[size])
+{
+	if( size < 1)
+		throw std::logic_error("Incorrect size error");
+}
+
+template <size_t size>
+DigitSequence<size>::DigitSequence(const char* numbers): _numbers(new unsigned short[size])
+{
+	if( size < 1)
+		throw std::logic_error("Incorrect size error");
+	if(numbers == 0)
+		throw std::invalid_argument("Attempt to use undefined pointer");
+	int zeroPos = '0'; // position of 0 in ASCII table
+	for(int i = 0; i < size; i++)
+		set(i, numbers[i] - zeroPos); // char - zeroPos = char integer representation
+									  // if this char located between '0' and '9'
+}
+
+
+template <size_t size>
+DigitSequence<size>::DigitSequence(const unsigned short* numbers): _numbers(new unsigned short[size])
+{
+	if( size < 1)
+		throw std::logic_error("Incorrect size error");
+	if(numbers == 0)
+		throw std::invalid_argument("Attempt to use undefined pointer");
+
+	for(int i = 0; i < 0; i++)
+		set(i, numbers[i]);
+}
+
+template <size_t size>
+DigitSequence<size>::DigitSequence(const DigitSequence<size>& ds): _numbers(new unsigned short[size])
+{
+	for(int i = 0; i < size; i++)
+		_numbers[i] = ds.get(i);
+}
+
+template <size_t size>
+DigitSequence<size>& DigitSequence<size>::operator=(const DigitSequence<size>& ds)
+{
+	if(_numbers == ds._numbers)
+		return *this;
+	for(int i = 0; i < size; i++)
+		_numbers[i] = ds.get(i);
+	return *this;
+}
+
+template <size_t size>
+DigitSequence<size>::~DigitSequence()
+{
+	delete[] _numbers;
+}
+
+template <size_t size>
+void DigitSequence<size>::set(const size_t i, const unsigned short digit)
+{
+	if(i >= size)
+		throw std::out_of_range("Index more or equals than size");
+	if(digit > 9)
+		throw std::invalid_argument("Incorrect digit value");
+
+	_numbers[i] = digit;
+}
+
+template <size_t size>
+unsigned short DigitSequence<size>::get(const size_t i) const
+{
+	if(i >= size)
+		throw std::out_of_range("Index more or equals than size");
+	return _numbers[i];
+}
+
+/* Utills */
 
 template <size_t size>
 bool operator==(const DigitSequence<size>& ds1, const DigitSequence<size>& ds2)
@@ -92,5 +129,5 @@ std::ostream& operator<<(std::ostream& os, const DigitSequence<size>& ds)
 }
 
 // opreator > and operator < will be defined only for need
-	 
+
 #endif
