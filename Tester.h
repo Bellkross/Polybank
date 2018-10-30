@@ -1,6 +1,7 @@
 #ifndef _Tester_h_
 #define _Tester_h_
 #include "DigitSequence.h"
+#include "CardNumber.h"
 #include <iostream>
 #include <exception>
 #include <cassert>
@@ -14,11 +15,16 @@ private:
 
 	template <size_t size>
 	bool digitSequenceTest();
+
+	void cardNumberTests();
+
+	bool cardNumberTest();
 };
 
 void Tester::run()
 {
 	digitSequenceTests();
+	cardNumberTests();
 }
 
 void Tester::digitSequenceTests()
@@ -212,6 +218,98 @@ bool Tester::digitSequenceTest()
 		return false;
 
 	// And if all the stars came together
+	return true;
+}
+
+void Tester::cardNumberTests()
+{
+	bool result = true;
+	result = cardNumberTest();
+#ifndef NDEBUG
+	std::cout << (result ? "[passed]" : "[failed]") << " cardNumberTest" << std::endl;
+	assert(result);
+#endif
+}
+
+bool Tester::cardNumberTest()
+{
+	const size_t cardNumbersSize = 16;
+	// Constructor and destructor tests
+	{ 
+		CardNumber cn; 
+	}
+	
+	DigitSequence<cardNumbersSize> ds0;
+	CardNumber cn0(ds0);
+
+	for(size_t i = 0; i < cardNumbersSize; i++)
+		if(cn0.get(i)!=ds0.get(i))
+			return false;
+	
+	DigitSequence<16> ds1;
+	for(size_t i = 0; i < cardNumbersSize; i++)
+		ds1.set(i,(cardNumbersSize-i)%10);
+	CardNumber cn1(ds1);
+
+	for(size_t i = 0; i < cardNumbersSize; i++)
+		if(cn1.get(i)!=ds1.get(i))
+			return false;
+	
+	try {
+		cn1.get(cardNumbersSize+1);
+		return false;
+	} catch(std::out_of_range e) {
+		// not implemented, test case
+	}
+
+	try {
+		cn1.get(-1);
+		return false;
+	} catch(std::out_of_range e) {
+		// not implemented, test case		
+	}
+
+	try {
+		cn1.set(cardNumbersSize + 1, -1);
+		return false;
+	} catch(std::out_of_range e) {
+		// not implemented, test case		
+	}
+
+	try {
+		cn1.set(-1,1);
+		return false;
+	} catch(std::out_of_range e) {
+		// not implemented, test case		
+	}
+
+	try {
+		cn1.set(0,12);
+		return false;
+	} catch(std::invalid_argument e) {
+		// not implemented, test case		
+	}
+
+	try {
+		cn1.set(0,-1);
+		return false;
+	} catch(std::invalid_argument e) {
+		// not implemented, test case		
+	}
+
+
+	// Copying constructor and assignment operator test
+	CardNumber cn3(cn1);
+	CardNumber cn4 = cn1;
+
+	for(size_t i = 0; i < cardNumbersSize; i++)
+		if(cn3.get(i)!=cn4.get(i) && cn1.get(i)!=cn3.get(i))
+			return false;
+
+	// Equality operator test
+	if(cn3!=cn4 || cn1!=cn3 || cn0 == cn1)
+		return false;
+
 	return true;
 }
 

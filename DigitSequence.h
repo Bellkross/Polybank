@@ -17,14 +17,22 @@ private:
 
 public:
 	DigitSequence();
-	DigitSequence(const char* numbers);
-	DigitSequence(const unsigned short* numbers);
-	DigitSequence(const DigitSequence<size>& ds); // Copying constructor
-	DigitSequence<size>& operator=(const DigitSequence<size>& ds); // Assignment operator
+	DigitSequence(const char*);
+	DigitSequence(const unsigned short*);
+	DigitSequence(const DigitSequence<size>&); // Copying constructor
+	DigitSequence<size>& operator=(const DigitSequence<size>&); // Assignment operator
 	~DigitSequence();
-	void set(const size_t i, const unsigned short digit); // We need setter, because we have to control input digits
-	unsigned short get(const size_t i) const; // Add getter in pair with the necessary setter instead of operator[]
+	void set(const size_t, const unsigned short); // We need setter, because we have to control input digits
+	unsigned short get(const size_t) const; // Add getter in pair with the necessary setter instead of operator[]
 };
+template <size_t size>
+bool operator==(const DigitSequence<size>&, const DigitSequence<size>&);
+template <size_t size>
+bool operator!=(const DigitSequence<size>&, const DigitSequence<size>&);
+template <size_t size>
+std::ostream& operator<<(std::ostream&, const DigitSequence<size>&);
+
+// > and < operators will be defined only for need
 
 /* Digit Sequence implementation */
 
@@ -127,7 +135,4 @@ std::ostream& operator<<(std::ostream& os, const DigitSequence<size>& ds)
 		os << ds.get(i);
 	return os;
 }
-
-// opreator > and operator < will be defined only for need
-
 #endif

@@ -74,9 +74,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CardNumber.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CardNumber.h" />
     <ClInclude Include="DigitSequence.h" />
     <ClInclude Include="Tester.h" />
   </ItemGroup>
