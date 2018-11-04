@@ -74,13 +74,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CardNumber.cpp" />
+    <ClCompile Include="card_number.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="pin.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CardNumber.h" />
-    <ClInclude Include="DigitSequence.h" />
-    <ClInclude Include="Tester.h" />
+    <ClInclude Include="card_number.h" />
+    <ClInclude Include="digit_sequence.h" />
+    <ClInclude Include="pin.h" />
+    <ClInclude Include="tester.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
