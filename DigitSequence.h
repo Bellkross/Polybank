@@ -117,7 +117,7 @@ template <size_t size>
 bool operator==(const DigitSequence<size>& ds1, const DigitSequence<size>& ds2)
 {
 	for(int i = 0; i < size; i++)
-		if(ds1.get(i)!=ds2.get(i))
+		if(ds1.get(i) != ds2.get(i))
 			return false;
 	return true;
 }
@@ -125,7 +125,7 @@ bool operator==(const DigitSequence<size>& ds1, const DigitSequence<size>& ds2)
 template <size_t size>
 bool operator!=(const DigitSequence<size>& ds1, const DigitSequence<size>& ds2)
 {
-	return !(ds1==ds2);
+	return !(ds1 == ds2);
 }
 
 template <size_t size>

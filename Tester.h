@@ -127,12 +127,12 @@ bool Tester::digitSequenceTest()
 	ds1=ds2;
 
 	for(int i = 0; i < size; i++) {
-		ds1.get(i%10); // acces to each digit without exceptions
-		ds2.set(i,i%10); // the same
+		ds1.get(i % 10); // access to each digit without exceptions
+		ds2.set(i, i % 10); // the same
 	}
 
 	try {
-		ds1.get(size+1);
+		ds1.get(size + 1);
 		return false;
 	} catch(std::out_of_range e) {
 		// not implemented, test case
@@ -182,15 +182,15 @@ bool Tester::digitSequenceTest()
 
 	if(ds1._numbers == ds3._numbers)
 		return false;
-	if(ds1!=ds3)
+	if(ds1 != ds3)
 		return false;
-	if(size > 1 && ds3==ds2)
-		return false;
-
-	if(ds1!=ds1)
+	if(size > 1 && ds3 == ds2)
 		return false;
 
-	// assginment operator test
+	if(ds1 != ds1)
+		return false;
+
+	// assignment operator test
 
 	ds1 = ds1;
 
@@ -207,7 +207,7 @@ bool Tester::digitSequenceTest()
 	if (ds1 != ds2)
 		return false;
 
-	// Copying constructor test
+	// Copy constructor test
 
 	DigitSequence<size> ds4(ds1);
 
@@ -298,16 +298,16 @@ bool Tester::cardNumberTest()
 	}
 
 
-	// Copying constructor and assignment operator test
+	// Copy constructor and assignment operator test
 	CardNumber cn3(cn1);
 	CardNumber cn4 = cn1;
 
 	for(size_t i = 0; i < cardNumbersSize; i++)
-		if(cn3.get(i)!=cn4.get(i) && cn1.get(i)!=cn3.get(i))
+		if(cn3.get(i) != cn4.get(i) && cn1.get(i) != cn3.get(i))
 			return false;
 
 	// Equality operator test
-	if(cn3!=cn4 || cn1!=cn3 || cn0 == cn1)
+	if(cn3 != cn4 || cn1 != cn3 || cn0 == cn1)
 		return false;
 
 	return true;
