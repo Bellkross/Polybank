@@ -1,5 +1,5 @@
 #include "CardNumber.h"
-#define size 16 // card number length
+#define size 16
 
 CardNumber::CardNumber(): _number(DigitSequence<size>()) {}
 
@@ -29,14 +29,14 @@ void CardNumber::set(const size_t i, const unsigned short digit)
 bool operator==(const CardNumber& cn1, const CardNumber& cn2)
 {
 	for(int i = 0; i < size; i++)
-		if(cn1.get(i)!=cn2.get(i))
+		if(cn1.get(i) != cn2.get(i))
 			return false;
 	return true;
 }
 
 bool operator!=(const CardNumber& cn1, const CardNumber& cn2)
 {
-	return !(cn1==cn2);
+	return !(cn1 == cn2);
 }
 
 std::ostream& operator<<(std::ostream& os, const CardNumber& cn)
