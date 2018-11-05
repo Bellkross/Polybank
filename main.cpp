@@ -2,7 +2,7 @@
   * Polybank: Polina Shlepakova and Vasylenko Kyrylo project
   */
 #include <iostream>
-#include "Tester.h"
+#include "tester.h"
 
 int main()
 {
