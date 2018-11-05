@@ -1,5 +1,5 @@
-#ifndef _Tester_h_
-#define _Tester_h_
+#ifndef TESTER_H_
+#define TESTER_H_
 #include "digit_sequence.h"
 #include "card_number.h"
 #include "pin.h"
@@ -123,9 +123,9 @@ bool Tester::digitSequenceTest()
 	DigitSequence<size> ds2;
 	ds1=ds2;
 
-	for(int i = 0; i < size; ++i) {
-		ds1.get(i%10); // acces to each digit without exceptions
-		ds2.set(i,i%10); // the same
+	for(int i = 0; i < size; i++) {
+		ds1.get(i % 10); // access to each digit without exceptions
+		ds2.set(i, i % 10); // the same
 	}
 
 	try {
@@ -349,4 +349,4 @@ bool Tester::pinTest()
 	return (pin3 == pin4 || pin1 == pin3 || pin0 != pin1); // Equality operator test
 }
 
-#endif
+#endif // TESTER_H_
