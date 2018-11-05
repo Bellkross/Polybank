@@ -12,8 +12,6 @@ template <size_t size>
 class DigitSequence
 {
 	friend class Tester; // friend class only for tests
-private:
-	unsigned short* _numbers;
 public:
 	DigitSequence();
 	explicit DigitSequence(const char*);
@@ -23,6 +21,8 @@ public:
 	~DigitSequence();
 	void set(const size_t, const unsigned short); // We need setter, because we have to control input digits
 	unsigned short get(const size_t) const; // Add getter in pair with the necessary setter instead of operator[]
+private:
+	unsigned short* _numbers;
 };
 template <size_t size>
 bool operator==(const DigitSequence<size>&, const DigitSequence<size>&);

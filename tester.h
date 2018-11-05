@@ -268,7 +268,6 @@ bool Tester::cardNumberTest()
 	for(size_t i = 0; i < cardNumbersSize; ++i) {
 		if(cn3.get(i) != cn4.get(i) && cn1.get(i) != cn3.get(i)) return false;
 	}
-<<<<<<< HEAD
 
 	return (cn3 == cn4 || cn1 == cn3 || cn0 != cn1); // Equality operator test
 }
@@ -348,10 +347,6 @@ bool Tester::pinTest()
 	}
 
 	return (pin3 == pin4 || pin1 == pin3 || pin0 != pin1); // Equality operator test
-=======
-
-	return (cn3 == cn4 || cn1 == cn3 || cn0 != cn1); // Equality operator test
->>>>>>> 6ace2e1... Fixed all code style problems
 }
 
 #endif
