@@ -19,8 +19,8 @@ public:
 	DigitSequence(const DigitSequence<size>&); // Copying constructor
 	DigitSequence<size>& operator=(const DigitSequence<size>&); // Assignment operator
 	~DigitSequence();
-	void set(const size_t, const unsigned short); // We need setter, because we have to control input digits
-	unsigned short get(const size_t) const; // Add getter in pair with the necessary setter instead of operator[]
+	void set(const size_t i, const unsigned short digit); // We need setter, because we have to control input digits
+	unsigned short get(const size_t i) const; // Add getter in pair with the necessary setter instead of operator[]
 private:
 	unsigned short* _numbers;
 };
