@@ -3,6 +3,7 @@
 #include "digit_sequence.h"
 #include "card_number.h"
 #include "pin.h"
+#include "validator.h"
 
 #include <iostream>
 #include <exception>
@@ -20,6 +21,8 @@ private:
 	bool cardNumberTest();
 	void pinTests();
 	bool pinTest();
+	void validatorTests();
+	bool validatorTest(const char*, const size_t);
 };
 
 void Tester::run()
@@ -27,6 +30,92 @@ void Tester::run()
 	digitSequenceTests();
 	cardNumberTests();
 	pinTests();
+	validatorTests();
+}
+
+void Tester::validatorTests()
+{
+	bool result = true;
+	
+	const char* kStr1 = "Hello World!";
+	const size_t len1 = strlen(kStr1);
+
+#ifndef NDEBUG
+	result = validatorTest(kStr1, len1);
+	std::cout << (result ? "[passed]" : "[failed]") << " validatorTest with " << kStr1 << std::endl;
+	assert(result);
+#endif
+
+	const char* kStr2 = "0123456789012345";
+	const size_t len2 = strlen(kStr2);
+
+#ifndef NDEBUG
+	result = validatorTest(kStr2, len2);
+	std::cout << (result ? "[passed]" : "[failed]") << " validatorTest with " << kStr2 << std::endl;
+	assert(result);
+#endif
+
+	const char* kStr3 = "0123456789012345";
+	const size_t len3 = 4;
+
+#ifndef NDEBUG
+	result = validatorTest(kStr3, len3);
+	std::cout << (result ? "[passed]" : "[failed]") << " validatorTest with " << kStr3 << std::endl;
+	assert(result);
+#endif
+
+	const char* kStr4 = "0123";
+	const size_t len4 = strlen(kStr4);
+
+#ifndef NDEBUG
+	result = validatorTest(kStr4, len4);
+	std::cout << (result ? "[passed]" : "[failed]") << " validatorTest with " << kStr4 << std::endl;
+	assert(result);
+#endif
+
+	const char* kStr5 = "013";
+	const size_t len5 = strlen(kStr5);
+
+#ifndef NDEBUG
+	result = validatorTest(kStr5, len5);
+	std::cout << (result ? "[passed]" : "[failed]") << " validatorTest with " << kStr5 << std::endl;
+	assert(result);
+#endif
+
+	const char* kStr6 = "013q";
+	const size_t len6 = strlen(kStr6);
+
+#ifndef NDEBUG
+	result = validatorTest(kStr6, len6);
+	std::cout << (result ? "[passed]" : "[failed]") << " validatorTest with " << kStr6 << std::endl;
+	assert(result);
+#endif
+
+}
+
+bool Tester::validatorTest(const char* s, const size_t len)
+{
+	bool result = true;
+	Validator v;
+	CardNumber* ptrCn = 0;
+	Pin* ptrPin = 0;
+	const size_t kCardSize = 16;
+	const size_t kPinSize = 4;
+	if(v.validateCardNumber(s, len, ptrCn)) {
+		DigitSequence<kCardSize> ds(s);
+		CardNumber testCn(ds);
+		result = ptrCn != 0 && testCn == *ptrCn && 
+				!v.validatePin(s,len,ptrPin);
+	} else {
+		try {
+			DigitSequence<kPinSize> ds(s); // can't catch exception here in the first test
+			Pin testPin(ds);
+			result = v.validatePin(s,len,ptrPin);
+			result = ptrPin != 0 && testPin == *ptrPin && result;
+		} catch(std::invalid_argument&) {}
+	}
+
+	return result;
 }
 
 void Tester::digitSequenceTests()
@@ -81,7 +170,7 @@ bool Tester::digitSequenceTest()
 		try {
 			DigitSequence<size> ds;
 			return false;
-		} catch (std::logic_error e) {
+		} catch (std::logic_error&) {
 			return true;
 		}
 	}
@@ -90,13 +179,13 @@ bool Tester::digitSequenceTest()
 		const unsigned short* undefinedPtr = 0;
 		DigitSequence<size> ds0(undefinedPtr);
 		return false;
-	} catch (std::invalid_argument e) {}
+	} catch (std::invalid_argument&) {}
 
 	try {
 		const char* undefinedPtr = 0;
 		DigitSequence<size> ds0(undefinedPtr);
 		return false;
-	} catch (std::invalid_argument e) {}
+	} catch (std::invalid_argument&) {}
 
 	try {
 		char* invalidCstr = new char[size];
@@ -106,7 +195,7 @@ bool Tester::digitSequenceTest()
 
 		DigitSequence<size> ds0(invalidCstr);
 		return false;
-	} catch (std::invalid_argument e) {}
+	} catch (std::invalid_argument&) {}
 
 	char* validCstr = new char[size];
 	for(int i = 0; i < size; ++i) {
@@ -131,32 +220,32 @@ bool Tester::digitSequenceTest()
 	try {
 		ds1.get(size + 1);
 		return false;
-	} catch(std::out_of_range e) {}
+	} catch(std::out_of_range&) {}
 
 	try {
 		ds1.get(-1);
 		return false;
-	} catch(std::out_of_range e) {}
+	} catch(std::out_of_range&) {}
 
 	try {
 		ds1.set(size + 1, -1);
 		return false;
-	} catch(std::out_of_range e) {}
+	} catch(std::out_of_range&) {}
 
 	try {
 		ds1.set(-1,1);
 		return false;
-	} catch(std::out_of_range e) {}
+	} catch(std::out_of_range&) {}
 
 	try {
 		ds1.set(0,12);
 		return false;
-	} catch(std::invalid_argument e) {}
+	} catch(std::invalid_argument&) {}
 
 	try {
 		ds1.set(0,-1);
 		return false;
-	} catch(std::invalid_argument e) {}
+	} catch(std::invalid_argument&) {}
 
 	// equality operator test
 
@@ -233,32 +322,32 @@ bool Tester::cardNumberTest()
 	try {
 		cn1.get(cardNumbersSize+1);
 		return false;
-	} catch(std::out_of_range e) {}
+	} catch(std::out_of_range&) {}
 
 	try {
 		cn1.get(-1);
 		return false;
-	} catch(std::out_of_range e) {}
+	} catch(std::out_of_range&) {}
 
 	try {
 		cn1.set(cardNumbersSize + 1, -1);
 		return false;
-	} catch(std::out_of_range e) {}
+	} catch(std::out_of_range&) {}
 
 	try {
 		cn1.set(-1,1);
 		return false;
-	} catch(std::out_of_range e) {}
+	} catch(std::out_of_range&) {}
 
 	try {
 		cn1.set(0,12);
 		return false;
-	} catch(std::invalid_argument e) {}
+	} catch(std::invalid_argument&) {}
 
 	try {
 		cn1.set(0,-1);
 		return false;
-	} catch(std::invalid_argument e) {}
+	} catch(std::invalid_argument&) {}
 
 
 	// Copy constructor and assignment operator test
@@ -310,32 +399,32 @@ bool Tester::pinTest()
 	try {
 		pin1.get(pinsSize+1);
 		return false;
-	} catch(std::out_of_range e) {}
+	} catch(std::out_of_range&) {}
 
 	try {
 		pin1.get(-1);
 		return false;
-	} catch(std::out_of_range e) {}
+	} catch(std::out_of_range&) {}
 
 	try {
 		pin1.set(pinsSize + 1, -1);
 		return false;
-	} catch(std::out_of_range e) {}
+	} catch(std::out_of_range&) {}
 
 	try {
 		pin1.set(-1,1);
 		return false;
-	} catch(std::out_of_range e) {}
+	} catch(std::out_of_range&) {}
 
 	try {
 		pin1.set(0,12);
 		return false;
-	} catch(std::invalid_argument e) {}
+	} catch(std::invalid_argument&) {}
 
 	try {
 		pin1.set(0,-1);
 		return false;
-	} catch(std::invalid_argument e) {}
+	} catch(std::invalid_argument&) {}
 
 
 	// Copying constructor and assignment operator test

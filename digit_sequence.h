@@ -11,7 +11,7 @@
 template <size_t size>
 class DigitSequence
 {
-	friend class Tester; // friend class only for tests
+	friend class Tester;
 public:
 	DigitSequence();
 	explicit DigitSequence(const char*);
