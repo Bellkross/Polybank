@@ -8,6 +8,7 @@
 #include <iostream>
 #include <exception>
 #include <cassert>
+#include <vector>
 
 class Tester {
 public:
@@ -22,7 +23,7 @@ private:
 	void pinTests();
 	bool pinTest();
 	void validatorTests();
-	bool validatorTest(const char*, const size_t);
+	bool validatorTest(const std::string&);
 };
 
 void Tester::run()
@@ -35,65 +36,18 @@ void Tester::run()
 
 void Tester::validatorTests()
 {
-	bool result = true;
-	
-	const char* kStr1 = "Hello World!";
-	const size_t len1 = strlen(kStr1);
-
+	std::vector<std::string> v = { "Hello World!", "0123456789012345", "0123456789012345", "0123", "013", "013q" };
+	for (int i = v.size() - 1; i >= 0; --i) {
 #ifndef NDEBUG
-	result = validatorTest(kStr1, len1);
-	std::cout << (result ? "[passed]" : "[failed]") << " validatorTest with " << kStr1 << std::endl;
-	assert(result);
+		bool result = validatorTest(v[i]);
+		std::cout << (result ? "[passed]" : "[failed]") << " validatorTest with " << v[i] << std::endl;
+		assert(result);
 #endif
-
-	const char* kStr2 = "0123456789012345";
-	const size_t len2 = strlen(kStr2);
-
-#ifndef NDEBUG
-	result = validatorTest(kStr2, len2);
-	std::cout << (result ? "[passed]" : "[failed]") << " validatorTest with " << kStr2 << std::endl;
-	assert(result);
-#endif
-
-	const char* kStr3 = "0123456789012345";
-	const size_t len3 = 4;
-
-#ifndef NDEBUG
-	result = validatorTest(kStr3, len3);
-	std::cout << (result ? "[passed]" : "[failed]") << " validatorTest with " << kStr3 << std::endl;
-	assert(result);
-#endif
-
-	const char* kStr4 = "0123";
-	const size_t len4 = strlen(kStr4);
-
-#ifndef NDEBUG
-	result = validatorTest(kStr4, len4);
-	std::cout << (result ? "[passed]" : "[failed]") << " validatorTest with " << kStr4 << std::endl;
-	assert(result);
-#endif
-
-	const char* kStr5 = "013";
-	const size_t len5 = strlen(kStr5);
-
-#ifndef NDEBUG
-	result = validatorTest(kStr5, len5);
-	std::cout << (result ? "[passed]" : "[failed]") << " validatorTest with " << kStr5 << std::endl;
-	assert(result);
-#endif
-
-	const char* kStr6 = "013q";
-	const size_t len6 = strlen(kStr6);
-
-#ifndef NDEBUG
-	result = validatorTest(kStr6, len6);
-	std::cout << (result ? "[passed]" : "[failed]") << " validatorTest with " << kStr6 << std::endl;
-	assert(result);
-#endif
-
+		v.pop_back();
+	}
 }
 
-bool Tester::validatorTest(const char* s, const size_t len)
+bool Tester::validatorTest(const std::string& s)
 {
 	bool result = true;
 	Validator v;
@@ -101,18 +55,20 @@ bool Tester::validatorTest(const char* s, const size_t len)
 	Pin* ptrPin = 0;
 	const size_t kCardSize = 16;
 	const size_t kPinSize = 4;
-	if(v.validateCardNumber(s, len, ptrCn)) {
+	if (v.validateCardNumber(s, ptrCn)) {
 		DigitSequence<kCardSize> ds(s);
 		CardNumber testCn(ds);
-		result = ptrCn != 0 && testCn == *ptrCn && 
-				!v.validatePin(s,len,ptrPin);
-	} else {
+		result = ptrCn != 0 && testCn == *ptrCn &&
+			!v.validatePin(s, ptrPin);
+	}
+	else {
 		try {
 			DigitSequence<kPinSize> ds(s); // can't catch exception here in the first test
 			Pin testPin(ds);
-			result = v.validatePin(s,len,ptrPin);
+			result = v.validatePin(s, ptrPin);
 			result = ptrPin != 0 && testPin == *ptrPin && result;
-		} catch(std::invalid_argument&) {}
+		}
+		catch (std::invalid_argument&) {}
 	}
 
 	return result;
