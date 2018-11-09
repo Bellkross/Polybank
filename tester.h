@@ -36,7 +36,13 @@ void Tester::run()
 
 void Tester::validatorTests()
 {
-	std::vector<std::string> v = { "Hello World!", "0123456789012345", "0123456789012345", "0123", "013", "013q" };
+	std::vector<std::string> v;
+	v.push_back("013q");
+	v.push_back("013");
+	v.push_back("0123");
+	v.push_back("0123456789012345");
+	v.push_back("0123456789012345");
+	v.push_back("Hello World!");
 	for (int i = v.size() - 1; i >= 0; --i) {
 #ifndef NDEBUG
 		bool result = validatorTest(v[i]);
