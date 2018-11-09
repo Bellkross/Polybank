@@ -4,14 +4,14 @@
 
 class CardNumber
 {
-	friend class Tester; // friend class only for tests
+	friend class Tester;
 public:
 	CardNumber();
 	explicit CardNumber(const DigitSequence<16>&);
 	CardNumber(const CardNumber&);
 	~CardNumber();
 	CardNumber& operator=(const CardNumber&);
-	// add getter and setter because of DigitSequence realization
+	/* add getter and setter because of DigitSequence realization */
 	void set(const size_t i, const unsigned short digit);
 	unsigned short get(const size_t i) const;
 private:

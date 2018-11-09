@@ -4,14 +4,14 @@
 
 class Pin 
 {
-	friend class Tester; // friend class only for tests
+	friend class Tester;
 public:
 	Pin();
 	explicit Pin(const DigitSequence<4>&);
 	Pin(const Pin&);
 	~Pin();
 	Pin& operator=(const Pin&);
-	// add getter and setter because of DigitSequence realization
+	/* Add getter and setter because of DigitSequence realization */
 	void set(const size_t, const unsigned short);
 	unsigned short get(const size_t) const;
 private:

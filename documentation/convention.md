@@ -137,7 +137,8 @@ ___
 
 - Data members of classes, both static and non-static, are named like ordinary nonmember variables, but with a preceding underscore.
 ___
-    class TableInfo {
+    class TableInfo 
+    {
     ...
     private:
     string _tableName;  // OK - underscore at beginning.
@@ -165,7 +166,8 @@ ___
 
 - The enumeration name, UrlTableErrors (and AlternateUrlTableErrors), is a type, and therefore mixed case.
 ___
-    enum UrlTableErrors {
+    enum UrlTableErrors 
+    {
     kOK = 0,
     kErrorOutOfMemory,
     kErrorMalformedInput,
@@ -185,14 +187,16 @@ ___
 
 Functions look like this:
 ___
-    ReturnType ClassName::FunctionName(Type par_name1, Type par_name2) {
+    ReturnType ClassName::FunctionName(Type par_name1, Type par_name2) 
+    {
     DoSomething();
     ...
     }
 If you have too much text to fit on one line:
 ___
     ReturnType ClassName::ReallyLongFunctionName(Type par_name1, Type par_name2,
-                                                Type par_name3) {
+                                                Type par_name3) 
+    {
     DoSomething();
     ...
     }
@@ -201,14 +205,16 @@ ___
     ReturnType LongClassName::ReallyReallyReallyLongFunctionName(
         Type par_name1,  // 4 space indent
         Type par_name2,
-        Type par_name3) {
+        Type par_name3) 
+    {
     DoSomething();  // 2 space indent
     ...
     }
 
 Unused parameters that are obvious from context may be omitted:
 ___
-    class Foo {
+    class Foo 
+    {
     public:
         Foo(Foo&&);
         Foo(const Foo&);
@@ -297,7 +303,8 @@ ___
 The acceptable formats for initializer lists are:
 ___
     // When everything fits on one line:
-    MyClass::MyClass(int var): some_var_(var) {
+    MyClass::MyClass(int var): some_var_(var) 
+    {
         DoSomething();
     }
 ___

@@ -2,6 +2,7 @@
 #define DIGIT_SEQUENCE_H_
 #include <exception>
 #include <iostream>
+#include <string>
 
 /**
 * Class for card number and pin representation
@@ -11,10 +12,11 @@
 template <size_t size>
 class DigitSequence
 {
-	friend class Tester; // friend class only for tests
+	friend class Tester;
 public:
 	DigitSequence();
 	explicit DigitSequence(const char*);
+	explicit DigitSequence(const std::string&);
 	explicit DigitSequence(const unsigned short*);
 	DigitSequence(const DigitSequence<size>&); // Copying constructor
 	DigitSequence<size>& operator=(const DigitSequence<size>&); // Assignment operator
@@ -52,6 +54,15 @@ DigitSequence<size>::DigitSequence(const char* numbers): _numbers(new unsigned s
 	}								  // if this char located between '0' and '9'
 }
 
+template <size_t size>
+DigitSequence<size>::DigitSequence(const std::string& numbers) : _numbers(new unsigned short[size])
+{
+	if (size < 1) throw std::logic_error("Incorrect size error");
+	int zeroPos = '0';
+	for (int i = 0; i < size; ++i) {
+		set(i, numbers[i] - zeroPos);
+	}
+}
 
 template <size_t size>
 DigitSequence<size>::DigitSequence(const unsigned short* numbers): _numbers(new unsigned short[size])
