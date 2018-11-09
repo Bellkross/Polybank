@@ -4,6 +4,7 @@
 #include "card_number.h"
 #include "pin.h"
 #include "validator.h"
+#include "user_interface.h"
 
 #include <iostream>
 #include <exception>
@@ -24,14 +25,25 @@ private:
 	bool pinTest();
 	void validatorTests();
 	bool validatorTest(const std::string&);
+	void uiTest();
 };
 
 void Tester::run()
 {
-	digitSequenceTests();
-	cardNumberTests();
-	pinTests();
-	validatorTests();
+	uiTest();
+	//digitSequenceTests();
+	//cardNumberTests();
+	//pinTests();
+	//validatorTests();
+}
+
+void Tester::uiTest()
+{
+	const UserInterface ui(std::cin, std::cout);
+	ui.greeting();
+	ui.clear();
+	ui.show("print value: ");
+	ui.show(ui.readCardNubmer());
 }
 
 void Tester::validatorTests()
@@ -66,8 +78,7 @@ bool Tester::validatorTest(const std::string& s)
 		CardNumber testCn(ds);
 		result = ptrCn != 0 && testCn == *ptrCn &&
 			!v.validatePin(s, ptrPin);
-	}
-	else {
+	} else {
 		try {
 			DigitSequence<kPinSize> ds(s); // can't catch exception here in the first test
 			Pin testPin(ds);

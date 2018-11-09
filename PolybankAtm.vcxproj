@@ -77,6 +77,7 @@
     <ClCompile Include="card_number.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pin.cpp" />
+    <ClCompile Include="user_interface.cpp" />
     <ClCompile Include="validator.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +85,7 @@
     <ClInclude Include="digit_sequence.h" />
     <ClInclude Include="pin.h" />
     <ClInclude Include="tester.h" />
+    <ClInclude Include="user_interface.h" />
     <ClInclude Include="validator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
