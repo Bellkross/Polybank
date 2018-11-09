@@ -8,6 +8,9 @@ class Pin
 public:
 	Pin();
 	explicit Pin(const DigitSequence<4>&);
+	explicit Pin(const char*);
+	explicit Pin(const std::string&);
+	explicit Pin(const unsigned short*);
 	Pin(const Pin&);
 	~Pin();
 	Pin& operator=(const Pin&);
