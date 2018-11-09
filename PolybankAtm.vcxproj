@@ -75,13 +75,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="card_number.cpp" />
+    <ClCompile Include="currency.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pin.cpp" />
     <ClCompile Include="validator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="card_number.h" />
+    <ClInclude Include="currency.h" />
     <ClInclude Include="digit_sequence.h" />
+    <ClInclude Include="person.h" />
     <ClInclude Include="pin.h" />
     <ClInclude Include="tester.h" />
     <ClInclude Include="validator.h" />

@@ -7,6 +7,6 @@ struct Person
 	std::string _name;
 	std::string _surname;
 	std::string _patronymic;
-}
+};
 
 #endif // PERSON_H_
