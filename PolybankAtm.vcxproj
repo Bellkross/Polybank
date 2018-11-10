@@ -74,6 +74,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="account.cpp" />
     <ClCompile Include="atm.cpp" />
     <ClCompile Include="card_number.cpp" />
     <ClCompile Include="currency.cpp" />
