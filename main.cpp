@@ -8,5 +8,6 @@ int main()
 {
 	Tester tester;
 	tester.run();
+	// tester.manualTest();
 	return 0;
 }

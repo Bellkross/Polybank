@@ -10,6 +10,7 @@
 #include "account.h"
 #include "storage.h"
 
+
 #include <iostream>
 #include <fstream>
 #include <exception>
@@ -19,6 +20,7 @@
 class Tester {
 public:
 	void run();
+	void manualTest();
 
 private:
 	void showTestResult(const bool passed, const std::string& msg);
@@ -49,10 +51,17 @@ private:
 	bool currencyMathTest();
 
 	void accountTests();
-
 	void storageTests();
-	bool storageTest(const CardNumber& cn);
+  
+	void pocketsTests();
+	bool pocketsEmptynessTest();
 };
+
+void Tester::manualTest()
+{
+	Atm atm(std::cin, std::cout);
+	atm.run();
+}
 
 void Tester::run()
 {
@@ -63,7 +72,8 @@ void Tester::run()
 	atmTests();
 	currencyTests();
 	accountTests();
-	storageTests();
+  storageTests();
+  pocketsTests();
 }
 
 void Tester::storageTests() 
@@ -105,7 +115,7 @@ void Tester::accountTests()
 	Person ow;
 	ow._patronymic = "Shlepakova";
 	ow._name = "Polina";
-	ow._patronymic = "Dmytrivna";
+	ow._patronymic = "Dmytryevna";
 
 	CardNumber cn1("1234567890123456");
 	CardNumber cn2("1234567890654321");
@@ -138,13 +148,56 @@ void Tester::accountTests()
 	showTestResult(res, "account tests");
 }
 
+void Tester::pocketsTests() 
+{
+#ifndef NDEBUG
+	bool result = pocketsEmptynessTest();
+	std::cout << (result ? "[passed]" : "[failed]") << " pocketsEmptynessTest" << std::endl;
+	assert(result);
+#endif // NDEBUG
+}
+
+bool Tester::pocketsEmptynessTest()
+{
+	Atm::Pockets p;
+	if(p.isEmpty()) return false;
+	p.withdraw(p.max()-1000);
+	if(p.max()!=1000) return false;
+	p.withdraw(100);
+	if(p.max()!=0) return false;
+
+	Atm::Pockets p2;
+	p2.withdraw(p2.max()-1100);
+	if(p2.max()!=1100) return false;
+	p2.withdraw(100);
+	if(p2.max()!=1000) return false;
+	p2.withdraw(500);
+	if(p2.max()!=500) return false;
+	p2.withdraw(200);
+	if(p2.max()!=300) return false;
+	p2.withdraw(200);
+	if(p2.max()!=100) return false;
+	p2.withdraw(100);
+	if(p2.max()!=0) return false;
+
+	Atm::Pockets p3;
+	p3.withdraw(p3.max()-1100);
+	if(p3.max()!=1100) return false;
+	p3.withdraw(100);
+	if(p3.max()!=1000) return false;
+	p3.withdraw(100);
+	if(p3.max()!=0) return false;
+
+	return true;
+}
+
 void Tester::atmTests()
 {
 #ifndef NDEBUG
 	bool result = atmReadTest();
 	std::cout << (result ? "[passed]" : "[failed]") << " atmReadTest" << std::endl;
 	assert(result);
-#endif
+#endif // NDEBUG
 }
 
 bool Tester::atmReadTest()
@@ -382,7 +435,7 @@ void Tester::digitSequenceTests()
 		bool res = results[i];
 		std::cout << (res ? "[passed]" : "[failed]") << " digitSequenceTest " << i + 1 << std::endl;
 		assert(res);
-#endif
+#endif // NDEBUG
 	}
 }
 
@@ -587,7 +640,7 @@ void Tester::cardNumberTests()
 #ifndef NDEBUG
 	std::cout << (result ? "[passed]" : "[failed]") << " cardNumberTest" << std::endl;
 	assert(result);
-#endif
+#endif // NDEBUG
 }
 
 bool Tester::cardNumberTest()
@@ -664,7 +717,7 @@ void Tester::pinTests()
 #ifndef NDEBUG
 	std::cout << (result ? "[passed]" : "[failed]") << " pinTest" << std::endl;
 	assert(result);
-#endif
+#endif // NDEBUG
 }
 
 bool Tester::pinTest()
