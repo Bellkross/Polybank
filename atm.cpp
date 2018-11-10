@@ -16,7 +16,6 @@ void Atm::run() const
 	_ui.greeting();
 	_getch();
 	_ui.clear();
-	std::string pins = readPin();
 	DigitSequence<16> dscn(number);
 	DigitSequence<4> dspin(pins);
 	CardNumber cn(dscn);
