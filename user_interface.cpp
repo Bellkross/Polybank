@@ -46,7 +46,7 @@ void Atm::UserInterface::greeting() const
 
 void Atm::UserInterface::maintance() const
 {
-	std::string maintance = "Choose command:\n1. Balance\n2. Withdraw cash\n3. Send money to another bill\n4. Put cash\n\n0. Finish session\n\ncommand: ";
+	std::string maintance = "Choose a command:\n1. Balance\n2. Withdraw cash\n3. Perform transaction\n4. Deposit cash\n\n0. Finish session\n\ncommand: ";
 	show(maintance);
 }
 
