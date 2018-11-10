@@ -3,6 +3,12 @@
 
 CardNumber::CardNumber(): _number(DigitSequence<cardlen>()) {}
 
+CardNumber::CardNumber(const char* pc): _number(DigitSequence<cardlen>(pc)) {}
+
+CardNumber::CardNumber(const std::string& s): _number(DigitSequence<cardlen>(s)) {}
+
+CardNumber::CardNumber(const unsigned short* arr): _number(DigitSequence<cardlen>(arr)) {}
+
 CardNumber::~CardNumber() {}
 
 CardNumber::CardNumber(const DigitSequence<cardlen>& ds): _number(ds) {}

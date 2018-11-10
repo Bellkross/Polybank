@@ -3,6 +3,12 @@
 
 Pin::Pin(): _number(DigitSequence<size>()) {}
 
+Pin::Pin(const char* pc): _number(DigitSequence<size>(pc)) {}
+
+Pin::Pin(const std::string& s): _number(DigitSequence<size>(s)) {}
+
+Pin::Pin(const unsigned short* arr): _number(DigitSequence<size>(arr)) {}
+
 Pin::~Pin() {}
 
 Pin::Pin(const DigitSequence<size>& ds): _number(ds) {}

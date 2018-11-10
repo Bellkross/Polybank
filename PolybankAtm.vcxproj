@@ -76,6 +76,7 @@
   <ItemGroup>
     <ClCompile Include="atm.cpp" />
     <ClCompile Include="card_number.cpp" />
+    <ClCompile Include="currency.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pin.cpp" />
     <ClCompile Include="server_access_layer.cpp" />
@@ -86,7 +87,9 @@
     <ClInclude Include="address.h" />
     <ClInclude Include="atm.h" />
     <ClInclude Include="card_number.h" />
+    <ClInclude Include="currency.h" />
     <ClInclude Include="digit_sequence.h" />
+    <ClInclude Include="person.h" />
     <ClInclude Include="pin.h" />
     <ClInclude Include="server_access_layer.h" />
     <ClInclude Include="tester.h" />

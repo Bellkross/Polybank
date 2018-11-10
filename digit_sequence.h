@@ -71,7 +71,7 @@ DigitSequence<size>::DigitSequence(const unsigned short* numbers): _numbers(new 
 	if(size < 1) throw std::logic_error("Incorrect size error");
 	if(numbers == 0) throw std::invalid_argument("Attempt to use undefined pointer");
 
-	for(int i = 0; i < 0; ++i) {
+	for(int i = 0; i < size; ++i) {
 		set(i, numbers[i]);
 	}
 }

@@ -8,6 +8,9 @@ class CardNumber
 public:
 	CardNumber();
 	explicit CardNumber(const DigitSequence<16>&);
+	explicit CardNumber(const char*);
+	explicit CardNumber(const std::string&);
+	explicit CardNumber(const unsigned short*);
 	CardNumber(const CardNumber&);
 	~CardNumber();
 	CardNumber& operator=(const CardNumber&);
