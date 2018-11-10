@@ -63,7 +63,7 @@ void Tester::atmTests()
 	bool result = atmReadTest();
 	std::cout << (result ? "[passed]" : "[failed]") << " atmReadTest" << std::endl;
 	assert(result);
-#endif
+#endif // NDEBUG
 }
 
 bool Tester::atmReadTest()
@@ -262,7 +262,7 @@ void Tester::validatorTests()
 		bool result = validatorTest(v[i]);
 		std::cout << (result ? "[passed]" : "[failed]") << " validatorTest with " << v[i] << std::endl;
 		assert(result);
-#endif
+#endif // NDEBUG
 		v.pop_back();
 	}
 }
@@ -301,7 +301,7 @@ void Tester::digitSequenceTests()
 		bool res = results[i];
 		std::cout << (res ? "[passed]" : "[failed]") << " digitSequenceTest " << i + 1 << std::endl;
 		assert(res);
-#endif
+#endif // NDEBUG
 	}
 }
 
@@ -506,7 +506,7 @@ void Tester::cardNumberTests()
 #ifndef NDEBUG
 	std::cout << (result ? "[passed]" : "[failed]") << " cardNumberTest" << std::endl;
 	assert(result);
-#endif
+#endif // NDEBUG
 }
 
 bool Tester::cardNumberTest()
@@ -583,7 +583,7 @@ void Tester::pinTests()
 #ifndef NDEBUG
 	std::cout << (result ? "[passed]" : "[failed]") << " pinTest" << std::endl;
 	assert(result);
-#endif
+#endif // NDEBUG
 }
 
 bool Tester::pinTest()
