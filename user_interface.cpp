@@ -1,81 +1,56 @@
-#include "user_interface.h"
+#include "atm.h"
 #define cardlen 16
 #define pinlen 4
 
-UserInterface::UserInterface(std::istream& in, std::ostream& out): istream(in), ostream(out) {}
+Atm::UserInterface::UserInterface(std::istream& in, std::ostream& out): istream(in), ostream(out) {}
 
-UserInterface::~UserInterface() {}
+Atm::UserInterface::~UserInterface() {}
 
-std::string UserInterface::readCardNubmer() const
+char Atm::UserInterface::readSymbol() const
 {
-	clear();
-	std::string number;
-	bool condition = number.length() != cardlen && !isNumbers(number);
-	while (condition) {
-		show("print card number: ");
-		number = read();
-		condition = number.length() != cardlen && !isNumbers(number);
-		if (!condition) {
-			clear();
-			show("Incorrect card number, print only digits between 0 and 9.");
-			_getch();
-		}
-	}
-	return number;
+	return istream.get();
 }
 
-std::string UserInterface::readPin() const
-{
-	clear();
-	std::string number;
-	bool condition = number.length() != pinlen && !isNumbers(number);
-	while (condition) {
-		show("print pin: ");
-		number = read();
-		condition = number.length() != pinlen && !isNumbers(number);
-		if (!condition) {
-			clear();
-			show("Incorrect pin, print only digits between 0 and 9.");
-			_getch();
-		}
-	}
-	return number;
-}
-
-std::string UserInterface::read() const
+std::string Atm::UserInterface::read() const
 {
 	std::string res;
 	std::getline(istream, res);
 	return res;
 }
 
-bool UserInterface::isNumbers(const std::string& s)  const
+bool Atm::UserInterface::isNumbers(const std::string& s)  const
 {
-	for (size_t i = 0; i < s.length(); ++i) {
+	size_t len = s.length();
+	for (size_t i = 0; i < len; ++i) {
 		if (!isNumber(s[i])) return false;
 	}
-	return true;
+	return len > 0;
 }
 
-bool UserInterface::isNumber(char c) const
+bool Atm::UserInterface::isNumber(char c) const
 {
 	int digit = c - '0';
 	return digit <= 9 && digit >= 0;
 }
 
-void UserInterface::show(const std::string& s) const
+void Atm::UserInterface::show(const std::string& s) const
 {
 	ostream << s.c_str();
 }
 
-void UserInterface::greeting() const
+void Atm::UserInterface::greeting() const
 {
-	std::string greeting = "\tWelcome to Polybank ATM!\nPlease insert any button for beginning.\n";
+	std::string greeting = "Welcome to Polybank ATM, press ENTER for beginning.\n";
 	show(greeting);
-	_getch();
 }
 
-void UserInterface::clear() const
+void Atm::UserInterface::maintance() const
+{
+	std::string maintance = "Choose command:\n1. Balance\n2. Withdraw cash\n3. Send money to another bill\n4. Put cash\n\n0. Finish session\n\ncommand: ";
+	show(maintance);
+}
+
+void Atm::UserInterface::clear() const
 {
 	if (system(NULL)) {
 		system("cls");

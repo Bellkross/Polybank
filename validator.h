@@ -8,8 +8,8 @@ class Validator
 	friend class Tester;
 public:
 	Validator(const size_t cardNumberLength = 16, const size_t pinLength = 4);
-	bool validateCardNumber(const std::string&, CardNumber*&) const;
-	bool validatePin(const std::string&, Pin*&) const;
+	bool validateCardNumber(const std::string&) const;
+	bool validatePin(const std::string&) const;
 	~Validator();
 private:
 	/* Validation rules */

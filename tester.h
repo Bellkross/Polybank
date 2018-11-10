@@ -1,12 +1,14 @@
 #ifndef TESTER_H_
 #define TESTER_H_
+#include "server_access_layer.h"
 #include "digit_sequence.h"
 #include "card_number.h"
 #include "pin.h"
 #include "validator.h"
-#include "user_interface.h"
+#include "atm.h"
 
 #include <iostream>
+#include <fstream>
 #include <exception>
 #include <cassert>
 #include <vector>
@@ -25,25 +27,50 @@ private:
 	bool pinTest();
 	void validatorTests();
 	bool validatorTest(const std::string&);
-	void uiTest();
+	void atmTests();
+	bool atmReadTest();
 };
 
 void Tester::run()
 {
-	uiTest();
-	//digitSequenceTests();
-	//cardNumberTests();
-	//pinTests();
-	//validatorTests();
+	digitSequenceTests();
+	cardNumberTests();
+	pinTests();
+	validatorTests();
+	atmTests();
 }
 
-void Tester::uiTest()
+void Tester::atmTests()
 {
-	const UserInterface ui(std::cin, std::cout);
-	ui.greeting();
-	ui.clear();
-	ui.show("print value: ");
-	ui.show(ui.readCardNubmer());
+#ifndef NDEBUG
+	bool result = atmReadTest();
+	std::cout << (result ? "[passed]" : "[failed]") << " atmReadTest" << std::endl;
+	assert(result);
+#endif
+}
+
+bool Tester::atmReadTest()
+{
+	std::ifstream is;
+	std::ofstream os;
+	try {
+		is.open("resources/test1.txt", std::fstream::in);
+		os.open("resources/output.txt", std::fstream::out);
+	} catch(std::iostream::failure&) {
+		std::cout << "File opening or reading or closing exception while testing" << std::endl;
+		return false;
+	}
+	Atm atm(is, os);
+	try {
+		DigitSequence<16> ds(atm.readCardNumber());
+		CardNumber cn(ds);
+	} catch (std::logic_error&) {
+		return false;
+	}
+
+	is.close();
+	os.close();
+	return true;
 }
 
 void Tester::validatorTests()
@@ -69,23 +96,18 @@ bool Tester::validatorTest(const std::string& s)
 {
 	bool result = true;
 	Validator v;
-	CardNumber* ptrCn = 0;
-	Pin* ptrPin = 0;
 	const size_t kCardSize = 16;
 	const size_t kPinSize = 4;
-	if (v.validateCardNumber(s, ptrCn)) {
+	if (v.validateCardNumber(s)) {
 		DigitSequence<kCardSize> ds(s);
 		CardNumber testCn(ds);
-		result = ptrCn != 0 && testCn == *ptrCn &&
-			!v.validatePin(s, ptrPin);
+		result = !v.validatePin(s);
 	} else {
 		try {
 			DigitSequence<kPinSize> ds(s); // can't catch exception here in the first test
 			Pin testPin(ds);
-			result = v.validatePin(s, ptrPin);
-			result = ptrPin != 0 && testPin == *ptrPin && result;
-		}
-		catch (std::invalid_argument&) {}
+			result = v.validatePin(s);
+		} catch (std::invalid_argument&) {}
 	}
 
 	return result;
@@ -119,6 +141,12 @@ bool Tester::digitSequenceTest()
 			return true;
 		}
 	}
+
+	try {
+		std::string bad = "";
+		DigitSequence<size> ds0(bad);
+		return false;
+	} catch (std::invalid_argument&) {}
 
 	try {
 		const unsigned short* undefinedPtr = 0;
