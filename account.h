@@ -24,8 +24,8 @@ public:
 	const	Person& owner() const;
 			Person& owner();
 
-	void withdraw(const Currency& amount);
-	void deposit(const Currency& amount);
+	bool withdraw(const Currency& amount);
+	bool deposit(const Currency& amount);
 private:
 	CardNumber _card;
 	Pin _pin;

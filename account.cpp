@@ -19,20 +19,21 @@ Currency& Account::balance() {return _balance;}
 const Person& Account::owner() const {return _owner;}
 Person& Account::owner() {return _owner;}
 
-void Account::withdraw(const Currency& amount) 
+bool Account::withdraw(const Currency& amount) 
 {
 	if (_occupied) {
 		wait();
 	}
 	if (balance() < amount) {
-		throw std::invalid_argument("Not enough money");
+		return false;
 	}
 	_occupied = true;
 	balance() -= amount;
 	_occupied = false;
+	return true;
 }
 
-void Account::deposit(const Currency& amount) 
+bool Account::deposit(const Currency& amount) 
 {
 	if (_occupied) {
 		wait();
@@ -40,6 +41,7 @@ void Account::deposit(const Currency& amount)
 	_occupied = true;
 	balance() += amount;
 	_occupied = false;
+	return true;
 }
 
 void Account::wait() const 

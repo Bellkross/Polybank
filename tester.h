@@ -89,13 +89,10 @@ void Tester::accountTests() {
 
 	res = a.balance() == b && res;
 	res = b > minus && res;
-	try {
-		a.withdraw(bigger);
-		res = false;
-	} catch (std::invalid_argument) {}
-	a.withdraw(minus);
+	res = !a.withdraw(bigger) && res;
+	res = a.withdraw(minus) && res;
 	res = a.balance() == (b - minus) && res;
-	a.deposit(plus);
+	res = a.deposit(plus) && res;
 	res = a.balance() == (b - minus + plus) && res;
 
 	showTestResult(res, "account tests");
