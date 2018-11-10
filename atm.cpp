@@ -16,7 +16,7 @@ void Atm::run() const
 	_ui.greeting();
 	_getch();
 	_ui.clear();
-	CardNumber cn(dscn);
+	CardNumber cn(readCardNumber());
 	Pin pin(dspin);
 	_serverAccessLayer->checkCredentials(cn, pin);
 	// serverAccessLayer.connect(CardNumber);
