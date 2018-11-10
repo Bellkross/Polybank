@@ -7,6 +7,7 @@
 #include "validator.h"
 #include "atm.h"
 #include "currency.h"
+#include "account.h"
 
 #include <iostream>
 #include <fstream>
@@ -45,6 +46,8 @@ private:
 	bool currencySetTest(const int unit, const int fraction);
 	bool currencyComparisonTest();
 	bool currencyMathTest();
+
+	void accountTests();
 };
 
 void Tester::run()
@@ -55,6 +58,47 @@ void Tester::run()
 	validatorTests();
 	atmTests();
 	currencyTests();
+	accountTests();
+}
+
+void Tester::accountTests() {
+	Person ow;
+	ow._patronymic = "Shlepakova";
+	ow._name = "Polina";
+	ow._patronymic = "Dmytryevna";
+
+	CardNumber cn1("1234567890123456");
+	CardNumber cn2("1234567890654321");
+	Pin p1("1234");
+	Pin p2("0000");
+	Currency b(1000, 25);
+	Currency minus(200);
+	Currency plus(1000);
+	Currency bigger = b + b;
+
+	Account a(cn1, p1, b, ow);
+	bool res = true;
+	res = a.owner()._name == ow._name && res;
+	res = a.owner()._surname == ow._surname && res;
+	res = a.owner()._patronymic == ow._patronymic && res;
+
+	res = a.card() == cn1 && res;
+	res = a.card() != cn2 && res;
+	res = a.pin() == p1 && res;
+	res = a.pin() != p2 && res;
+
+	res = a.balance() == b && res;
+	res = b > minus && res;
+	try {
+		a.withdraw(bigger);
+		res = false;
+	} catch (std::invalid_argument) {}
+	a.withdraw(minus);
+	res = a.balance() == (b - minus) && res;
+	a.deposit(plus);
+	res = a.balance() == (b - minus + plus) && res;
+
+	showTestResult(res, "account tests");
 }
 
 void Tester::atmTests()

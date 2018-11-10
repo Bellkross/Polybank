@@ -1,6 +1,8 @@
 #ifndef ACCOUNT_H_
 #define ACCOUNT_H_
 
+#include <exception>
+
 #include "person.h"
 #include "currency.h"
 #include "card_number.h"
@@ -30,6 +32,8 @@ private:
 	Currency _balance;
 	Person _owner;
 	bool _occupied;
+
+	void wait() const;
 
 	/* Account replication is forbidden */
 	Account(const Account&);
