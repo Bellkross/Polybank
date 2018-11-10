@@ -34,8 +34,8 @@ void CardNumber::set(const size_t i, const unsigned short digit)
 
 bool operator==(const CardNumber& cn1, const CardNumber& cn2)
 {
-	for(int i = 0; i < cardlen; ++i) {
-		if(cn1.get(i) != cn2.get(i)) return false;
+	for (int i = 0; i < cardlen; ++i) {
+		if (cn1.get(i) != cn2.get(i)) return false;
 	}
 	return true;
 }
@@ -43,6 +43,32 @@ bool operator==(const CardNumber& cn1, const CardNumber& cn2)
 bool operator!=(const CardNumber& cn1, const CardNumber& cn2)
 {
 	return !(cn1 == cn2);
+}
+
+bool operator<(const CardNumber& cn1, const CardNumber& cn2)
+{
+	for (int i = 0; i < cardlen; ++i) {
+		if (cn1.get(i) != cn2.get(i)) {
+			return cn1.get(i) < cn2.get(i);
+		}
+	}
+	assert(cn1 == cn2);
+	return false;
+}
+
+bool operator>(const CardNumber& cn1, const CardNumber& cn2)
+{
+	return cn2 < cn1;
+}
+
+bool operator<=(const CardNumber& cn1, const CardNumber& cn2)
+{
+	return cn1 == cn2 ? true : cn1 < cn2;
+}
+
+bool operator>=(const CardNumber& cn1, const CardNumber& cn2)
+{
+	return cn2 <= cn1;
 }
 
 std::ostream& operator<<(std::ostream& os, const CardNumber& cn)
