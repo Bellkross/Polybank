@@ -4,6 +4,7 @@
 #include "card_number.h"
 #include "pin.h"
 #include "validator.h"
+#include "currency.h"
 
 #include <iostream>
 #include <exception>
@@ -15,15 +16,29 @@ public:
 	void run();
 
 private:
+	void showTestResult(const bool passed, const std::string& msg);
+
 	void digitSequenceTests();
 	template <size_t size>
 	bool digitSequenceTest();
+	
 	void cardNumberTests();
 	bool cardNumberTest();
+	
 	void pinTests();
 	bool pinTest();
+	
 	void validatorTests();
 	bool validatorTest(const std::string&);
+	
+	void currencyTests();
+	bool currencyTest(const int unit, const int fraction);
+	bool currencyCtorTest(const int unit, const int fraction);
+	bool currencyCopyTest(const int unit, const int fraction);
+	bool currencyAssignTest(const int unit, const int fraction);
+	bool currencySetTest(const int unit, const int fraction);
+	bool currencyComparisonTest();
+	bool currencyMathTest();
 };
 
 void Tester::run()
@@ -32,6 +47,165 @@ void Tester::run()
 	cardNumberTests();
 	pinTests();
 	validatorTests();
+	currencyTests();
+}
+
+void Tester::showTestResult(const bool passed, const std::string& msg)
+{
+#ifndef NDEBUG
+	std::cout << (passed ? "[passed]" : "[failed]") << ' ' << msg << std::endl;
+#endif // NDEBUG
+	assert(passed);
+}
+
+void Tester::currencyTests()
+{
+	const size_t nUnits = 2;
+	int units[nUnits] = {0, 10};
+	const size_t nFractions = 5;
+	int fractions[nFractions] = {30, 99, 100, 123, 789};
+	bool res = false;
+	for (size_t u = 0; u < nUnits; ++u) {
+		for (size_t f = 0; f < nFractions; ++f) {
+			res = currencyTest(units[u], fractions[f]);
+#ifndef NDEBUG
+			std::cout << (res ? "[passed]" : "[failed]") << " currencyTest with " << 
+				units[u] << '.' << fractions[f] << std::endl;
+#endif // NDEBUG
+			assert(res);
+		}
+	}
+
+	showTestResult(currencyComparisonTest(), "currency comparison test");
+	showTestResult(currencyMathTest(), "currency math test");
+}
+
+bool Tester::currencyTest(const int unit, const int fraction)
+{
+	return	currencyCtorTest(unit, fraction) &&
+			currencyCopyTest(unit, fraction) &&
+			currencyAssignTest(unit, fraction) &&
+			currencySetTest(unit, fraction);
+}
+
+bool Tester::currencyCtorTest(const int unit, const int fraction)
+{
+	bool res = true;
+	Currency c(unit, fraction);
+	
+	res = c.fraction() < 100 && res;
+	if (fraction < 100) {
+		res = unit == c.unit() && fraction == c.fraction() && res;
+	} else {
+		res = unit + (fraction / 100) == c.unit() && res;
+		res = fraction % 100 == c.fraction() && res;
+	}
+
+	Currency c3(unit);
+	res = c3.fraction() == 0 && res;
+	return res;
+}
+
+bool Tester::currencyCopyTest(const int unit, const int fraction)
+{
+	bool res = true;
+	Currency c(unit, fraction);
+	Currency cc(c);
+	res = c.unit() == cc.unit() && res;
+	res = c.fraction() == cc.fraction() && res;
+	return res;
+}
+
+bool Tester::currencyAssignTest(const int unit, const int fraction)
+{
+	bool res = true;
+	Currency c(unit, fraction);
+	Currency cc(235253);
+	cc = c;
+	res = c.unit() == cc.unit() && res;
+	res = c.fraction() == cc.fraction() && res;
+	return res;
+}
+
+bool Tester::currencySetTest(const int unit, const int fraction)
+{
+	bool res = true;
+	Currency c(unit, fraction);
+	
+	Currency cc(c);
+	cc.setUnit(200);
+	res = c.fraction() == cc.fraction() && res;
+	
+	cc = c;
+	cc.setFraction(200);
+	res = c.unit() < cc.unit() && res;
+	res = unit + (fraction / 100) == c.unit() && res;
+	res = fraction % 100 == c.fraction() && res;
+	return res;
+}
+
+bool Tester::currencyComparisonTest()
+{
+	bool res = true;
+	Currency c1(10, 50);
+	Currency c2(10, 51);
+	Currency c3(12, 10);
+
+	res = (c1 == c1) && !(c1 == c2) && !(c1 == c3) && res;
+	res = !(c1 != c1) && (c2 != c3) && (c2 != c3) && res;
+	
+	res = !(c1 < c1) && (c1 < c2) && !(c2 < c1) && (c1 < c3) && !(c3 < c2) && res;
+	res = !(c1 > c1) && (c2 > c1) && !(c2 > c3) && !(c1 > c2) && (c3 > c1) && res;
+	res = (c1 <= c2) && (c1 <= c2) && !(c2 <= c1) && (c1 <= c3) && !(c3 <= c2) && res;
+	res = (c1 >= c1) && (c2 >= c1) && !(c2 >= c3) && !(c1 >= c2) && (c3 >= c1) && res;
+	return res;
+}
+
+bool Tester::currencyMathTest()
+{
+	bool res = true;
+	int u1 = 10, f1 = 35;
+	int u2 = 10, f2 = 70;
+	int u3 = 9, f3 = 60;
+	Currency c1(u1, f1);
+	Currency c2(u2, f2);
+	Currency c3(u3, f3);
+
+	res = (c1 + c2) == (c2 + c1) && res;
+	Currency plus = c1 + c2;
+	res = plus == (c1 += c2) && res;
+	if (f1 + f2 < 100) {
+		res = plus.unit() == u1 + u2 && res;
+		res = plus.fraction() == f1 + f2 && res;
+	} else {
+		res = plus.unit() == u1 + u2 + 1 && res;
+		res = plus.fraction() == f1 + f2 - 100 && res;
+	}
+	c1.setUnit(u1); 
+	c1.setFraction(f1);
+	
+	try {
+		c1 - c2;
+		return false;
+	} catch (std::logic_error&) {}
+
+	try {
+		c1 -= c2;
+		return false;
+	} catch (std::logic_error&) {}
+	
+	Currency minus = c1 - c3; 
+	res = minus == (c1 -= c3) && res;
+	if (f1 - f3 >= 0) {
+		res = minus.unit() == u1 - u3 && res;
+		res = minus.fraction() == f1 - f3 && res;
+	} else {
+		res = minus.unit() == u1 - u3 - 1 && res;
+		res = minus.fraction() == f1 - f3 + 100 && res;
+	}
+	minus = c2 - c2;
+	res = minus.unit() == 0 && minus.fraction() == 0 && res;
+	return res;
 }
 
 void Tester::validatorTests()
