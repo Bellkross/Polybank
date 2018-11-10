@@ -40,7 +40,7 @@ void Atm::UserInterface::show(const std::string& s) const
 
 void Atm::UserInterface::greeting() const
 {
-	std::string greeting = "Welcome to Polybank ATM, press ENTER for beginning.\n";
+	std::string greeting = "Welcome to Polybank ATM, press ENTER to begin.\n";
 	show(greeting);
 }
 
