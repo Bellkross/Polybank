@@ -11,6 +11,8 @@ public:
 	//ServerAccessLayer(const Server&);
 	ServerAccessLayer(); // make private after server appearing
 	~ServerAccessLayer();
+
+	std::string fetchAccountName(const CardNumber&, const Pin&);
 	bool checkCredentials(const CardNumber&, const Pin&);
 	Currency balance(const CardNumber&, const Pin&);
 	bool withdraw(const CardNumber&, const Pin&, const Currency&);

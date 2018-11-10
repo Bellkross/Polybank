@@ -17,6 +17,7 @@
 class Tester {
 public:
 	void run();
+	void manualTest();
 
 private:
 	void showTestResult(const bool passed, const std::string& msg);
@@ -46,6 +47,12 @@ private:
 	bool currencyComparisonTest();
 	bool currencyMathTest();
 };
+
+void Tester::manualTest()
+{
+	Atm atm(std::cin, std::cout);
+	atm.run();
+}
 
 void Tester::run()
 {
@@ -262,7 +269,7 @@ void Tester::validatorTests()
 		bool result = validatorTest(v[i]);
 		std::cout << (result ? "[passed]" : "[failed]") << " validatorTest with " << v[i] << std::endl;
 		assert(result);
-#endif // NDEBUG
+#endif
 		v.pop_back();
 	}
 }

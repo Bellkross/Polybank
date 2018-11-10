@@ -4,10 +4,10 @@
 #include <string>
 #include <conio.h> // for getch
 #include "validator.h"
-#include "card_number.h"
 #include "address.h"
-#include "pin.h"
 
+class CardNumber;
+class Pin;
 class ServerAccessLayer;
 class Atm 
 {
@@ -16,8 +16,11 @@ public:
 	Atm(std::istream&, std::ostream&);
 	~Atm();
 
-	void run() const;
+	void run();
+
 private:
+	static const size_t attempts;
+
 	class UserInterface
 	{
 	public:
@@ -54,9 +57,10 @@ private:
 	UserInterface _ui;
 	Validator _validator;
 	ServerAccessLayer* _serverAccessLayer;
-	//temporary fields
-	CardNumber _number;
-	Pin _pin;
+	CardNumber* _number;
+	Pin* _pin;
+
+	void balance() const;
 
 	std::string readCardNumber() const;
 	std::string readPin() const;

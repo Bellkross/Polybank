@@ -10,9 +10,14 @@ ServerAccessLayer::~ServerAccessLayer()
 
 }
 
-bool ServerAccessLayer::checkCredentials(const CardNumber& cardNumber, const Pin& pin)
+std::string ServerAccessLayer::fetchAccountName(const CardNumber& cn, const Pin& pin)
 {
-	return true;// _server.check(cardNumber, pin);
+	return std::string("Name Surname Patronymic"); // _server.fetchAccountName(cn, pin);
+}
+
+bool ServerAccessLayer::checkCredentials(const CardNumber& cn, const Pin& pin)
+{
+	return true;// _server.check(cn, pin);
 }
 
 Currency ServerAccessLayer::balance(const CardNumber& cn, const Pin& pin)

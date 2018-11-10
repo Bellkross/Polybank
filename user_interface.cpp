@@ -8,7 +8,9 @@ Atm::UserInterface::~UserInterface() {}
 
 char Atm::UserInterface::readSymbol() const
 {
-	return istream.get();
+	std::string line;
+	istream >> line;
+	return line[0];
 }
 
 std::string Atm::UserInterface::read() const
