@@ -80,6 +80,7 @@
     <ClCompile Include="currency.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pin.cpp" />
+    <ClCompile Include="pockets.cpp" />
     <ClCompile Include="server_access_layer.cpp" />
     <ClCompile Include="user_interface.cpp" />
     <ClCompile Include="validator.cpp" />

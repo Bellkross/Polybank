@@ -5,10 +5,11 @@
 #include "pin.h"
 #include <sstream> 
 
-const size_t Atm::attempts = 3;
-
-Atm::Atm(std::istream& in, std::ostream& out): _ui(in, out), _validator(), _serverAccessLayer(new ServerAccessLayer()), _number(0), _pin(0)
+Atm::Atm(std::istream& in, std::ostream& out): 
+	_ui(in, out), _validator(), _serverAccessLayer(new ServerAccessLayer()), 
+	_number(0), _pin(0), _attempts(3)
 {
+	// address initialization
 	_address._country = "TestCountry";
 	_address._city = "TestCity";
 	_address._street = "TestStreet";
@@ -41,7 +42,7 @@ void Atm::run()
 #endif // NDEBUG
 
 	bool credentials = _serverAccessLayer->checkCredentials(*_number, *_pin);
-	size_t atmpts = attempts;
+	size_t atmpts = _attempts;
 	while(!credentials) {
 		if(atmpts-- > 0) {
 			_ui.show(std::string("Incorrect pin or card number, try again. You have %d attempts.", atmpts));
@@ -66,6 +67,7 @@ void Atm::run()
 				balance();
 				break;
 			case WITHDRAW:
+				withdraw();
 				break;
 			case SEND:
 				break;
@@ -75,6 +77,24 @@ void Atm::run()
 				return;
 				break;
 		}
+	}
+}
+
+void Atm::withdraw() const
+{
+	if(_pockets.isEmpty()) {
+		_ui.show("Sorry, but atm is empty, try again later.");
+		_getch();
+		return;
+	}
+	Currency balance = _serverAccessLayer->balance(*_number, *_pin);
+	_ui.read(); // skip one line
+	Currency curr(readAmountForAtm());
+	if(_serverAccessLayer->withdraw(*_number,*_pin,curr)) {
+		_pockets.withdraw(curr.unit());
+		_ui.clear();
+		_ui.show("You can take your money. Press ENTER to back to the menu.");
+		_getch();
 	}
 }
 
@@ -88,6 +108,34 @@ void Atm::balance() const
 	_ui.show(stream.str());
 	_ui.show("Press ENTER to back to the menu.");
 	_getch();
+}
+
+size_t Atm::readAmountForAtm() const
+{
+	size_t max = _pockets.max();
+	std::ostringstream stream;
+	stream << "Type amount of money to withdraw that is divisible by 100 and no bigger than " << max << '\n';
+	stream << "amount: ";
+	int amount = -1;
+	while(amount < 0) {
+		_ui.clear();
+		_ui.show(stream.str());
+		try {
+			amount = std::stoi(_ui.read());
+		} catch (std::logic_error&) {
+			_ui.clear();
+			_ui.show("Incorrect amount value! Press ENTER to repeat.");
+			amount = -1;
+			_getch();
+		}
+		if(amount < 1 || amount > max || amount % 100 != 0) {
+			_ui.clear();
+			_ui.show("Incorrect amount value! Press ENTER to repeat.");
+			amount = -1;
+			_getch();
+		}
+	}
+	return amount;
 }
 
 int Atm::readCommand() const
@@ -140,6 +188,21 @@ std::string Atm::readPin() const
 		}
 	}
 	return pin;
+}
+
+bool isNumbers(const std::string& s)
+{
+	size_t len = s.length();
+	for (size_t i = 0; i < len; ++i) {
+		if (!isNumber(s[i])) return false;
+	}
+	return len > 0;
+}
+
+bool isNumber(char c)
+{
+	int digit = c - '0';
+	return digit <= 9 && digit >= 0;
 }
 
 bool isCommand(const char c)

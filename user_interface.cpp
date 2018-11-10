@@ -20,21 +20,6 @@ std::string Atm::UserInterface::read() const
 	return res;
 }
 
-bool Atm::UserInterface::isNumbers(const std::string& s)  const
-{
-	size_t len = s.length();
-	for (size_t i = 0; i < len; ++i) {
-		if (!isNumber(s[i])) return false;
-	}
-	return len > 0;
-}
-
-bool Atm::UserInterface::isNumber(char c) const
-{
-	int digit = c - '0';
-	return digit <= 9 && digit >= 0;
-}
-
 void Atm::UserInterface::show(const std::string& s) const
 {
 	ostream << s.c_str();

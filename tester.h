@@ -49,6 +49,8 @@ private:
 	bool currencyMathTest();
 
 	void accountTests();
+	void pocketsTests();
+	bool pocketsEmptynessTest();
 };
 
 void Tester::manualTest()
@@ -66,6 +68,7 @@ void Tester::run()
 	atmTests();
 	currencyTests();
 	accountTests();
+	pocketsTests();
 }
 
 void Tester::accountTests() {
@@ -103,6 +106,49 @@ void Tester::accountTests() {
 	res = a.balance() == (b - minus + plus) && res;
 
 	showTestResult(res, "account tests");
+}
+
+void Tester::pocketsTests() 
+{
+#ifndef NDEBUG
+	bool result = pocketsEmptynessTest();
+	std::cout << (result ? "[passed]" : "[failed]") << " pocketsEmptynessTest" << std::endl;
+	assert(result);
+#endif // NDEBUG
+}
+
+bool Tester::pocketsEmptynessTest()
+{
+	Atm::Pockets p;
+	if(p.isEmpty()) return false;
+	p.withdraw(p.max()-1000);
+	if(p.max()!=1000) return false;
+	p.withdraw(100);
+	if(p.max()!=0) return false;
+
+	Atm::Pockets p2;
+	p2.withdraw(p2.max()-1100);
+	if(p2.max()!=1100) return false;
+	p2.withdraw(100);
+	if(p2.max()!=1000) return false;
+	p2.withdraw(500);
+	if(p2.max()!=500) return false;
+	p2.withdraw(200);
+	if(p2.max()!=300) return false;
+	p2.withdraw(200);
+	if(p2.max()!=100) return false;
+	p2.withdraw(100);
+	if(p2.max()!=0) return false;
+
+	Atm::Pockets p3;
+	p3.withdraw(p3.max()-1100);
+	if(p3.max()!=1100) return false;
+	p3.withdraw(100);
+	if(p3.max()!=1000) return false;
+	p3.withdraw(100);
+	if(p3.max()!=0) return false;
+
+	return true;
 }
 
 void Tester::atmTests()
