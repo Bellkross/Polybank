@@ -4,6 +4,7 @@
 #include <string>
 #include <conio.h> // for getch
 #include <sstream> 
+#include "currency.h"
 #include "validator.h"
 #include "address.h"
 
@@ -74,7 +75,9 @@ private:
 		TRANSACTION=5,
 	};
 	
-	const size_t _attempts;
+	const size_t kAttempts;
+	const double kTransactionLowBoundary;
+	const double kTransactionHighBoundary;
 
 	mutable Pockets _pockets;
 	Address _address;
@@ -88,7 +91,9 @@ private:
 	void withdraw() const;
 	void deposit() const;
 	void depositToAnotherBill() const;
+	void transaction() const;
 
+	Currency readAmountForTransaction(const Currency& balance) const;
 	size_t readAmountForAtm(const size_t) const;
 	std::string readCardNumber() const;
 	std::string readPin() const;
@@ -100,6 +105,7 @@ private:
 	Atm& operator=(const Atm&);
 };
 
+bool isCurrencyNumbers(const std::string&);
 bool isNumbers(const std::string&);
 bool isNumber(char);
 bool isCommand(const char);
