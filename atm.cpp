@@ -146,7 +146,7 @@ void Atm::depositToAnotherBill() const
 	}
 	CardNumber number = CardNumber(readCardNumber());
 	Currency curr(readAmountForAtm(_pockets.maxDeposit()));
-	if(_serverAccessLayer->transact(*_number,curr)) {
+	if(_serverAccessLayer->transact(number,curr)) {
 		_pockets.deposit(curr.unit());
 		_ui.clear();
 		_ui.show("Deposit finished. Press ENTER to return to the menu.");
