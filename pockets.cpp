@@ -1,5 +1,4 @@
 #include "atm.h"
-#include <algorithm>
 
 Atm::Pockets::Pockets(): kLen(3), kCount(500), kMaxDepositCount(500*5), _capacity(0), _arr(new size_t[3])
 {
