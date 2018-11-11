@@ -26,7 +26,4 @@ private:
 	ServerAccessLayer& operator=(const ServerAccessLayer&);
 };
 
-void encrypt(std::string& data);
-void decrypt(std::string& data);
-
 #endif

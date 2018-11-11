@@ -44,12 +44,3 @@ bool ServerAccessLayer::transact(const CardNumber& sender, const Pin& pin, const
 {
 	return true; // _server.transact(sender, pin, recipient, curr);
 }
-
-void encrypt(std::string& data)
-{
-	// will be implemented after basic functional
-}
-void decrypt(std::string& data)
-{
-	// will be implemented after basic functional
-}
