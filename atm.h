@@ -68,12 +68,13 @@ private:
 	};
 	enum Command 
 	{
-		QUIT=0,
 		BALANCE=1,
 		WITHDRAW=2,
 		DEPOSIT=3,
 		DEPOSIT_TO_ANOTHER_BILL=4,
 		TRANSACTION=5,
+		END_SESSION=6,
+		TURN_OFF=0
 	};
 	
 	const size_t kAttempts;

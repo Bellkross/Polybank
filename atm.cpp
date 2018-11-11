@@ -24,58 +24,68 @@ Atm::~Atm()
 
 void Atm::run()
 {
-	_ui.clear();
-	_ui.greeting();
-	_getch();
-	_ui.clear();
-
-	_number = new CardNumber(readCardNumber());
-	_pin = new Pin(readPin());
-
-	bool credentials = _serverAccessLayer->checkCredentials(*_number, *_pin);
-	size_t atmpts = kAttempts;
-	while(!credentials) {
-		if(atmpts-- > 0) {
-			std::ostringstream stream;
-			stream << "Incorrect pin or card number, try again. You have ";
-			stream << atmpts << " attempts.";
-			_ui.show(stream.str());
-			delete _number;
-			delete _pin;
-			_number = new CardNumber(readCardNumber());
-			_pin = new Pin(readPin());
-			credentials = _serverAccessLayer->checkCredentials(*_number, *_pin);
-		} else {
-			_ui.show("Limit of attempts exhausted.");
-			return;
-		}
-	}
-	int command = -1;
-	while(command!=QUIT) {
+	while(true) {
 		_ui.clear();
-		_ui.maintance();
-		command = readCommand();
+		_ui.greeting();
+		_getch();
 		_ui.clear();
-		_ui.read(); // skip one line
-		switch(command) {
-			case BALANCE:
-				balance();
-				break;
-			case WITHDRAW:
-				withdraw();
-				break;
-			case DEPOSIT:
-				deposit();
-				break;
-			case DEPOSIT_TO_ANOTHER_BILL:
-				depositToAnotherBill();
-				break;
-			case TRANSACTION:
-				transaction();
-				break;
-			default: // QUIT
+
+		_number = new CardNumber(readCardNumber());
+		_pin = new Pin(readPin());
+
+		bool credentials = _serverAccessLayer->checkCredentials(*_number, *_pin);
+		size_t atmpts = kAttempts;
+		while(!credentials) {
+			if(atmpts-- > 1) {
+				std::ostringstream stream;
+				stream << "Incorrect pin or card number, try again. You have ";
+				stream << atmpts << " attempts.";
+				_ui.clear();
+				_ui.show(stream.str());
+				_getch();
+				_ui.clear();
+				delete _number;
+				delete _pin;
+				_number = new CardNumber(readCardNumber());
+				_pin = new Pin(readPin());
+				credentials = _serverAccessLayer->checkCredentials(*_number, *_pin);
+			} else {
+				_ui.show("Limit of attempts exhausted.\n");
 				return;
+			}
 		}
+		int command = -1;
+		while(command != TURN_OFF && command != END_SESSION) {
+			_ui.clear();
+			_ui.maintance();
+			command = readCommand();
+			_ui.clear();
+			_ui.read(); // skip one line
+			switch(command) {
+				case BALANCE:
+					balance();
+					break;
+				case WITHDRAW:
+					withdraw();
+					break;
+				case DEPOSIT:
+					deposit();
+					break;
+				case DEPOSIT_TO_ANOTHER_BILL:
+					depositToAnotherBill();
+					break;
+				case TRANSACTION:
+					transaction();
+					break;
+				case END_SESSION:
+					break;
+				default: // TURN_OFF
+					return;
+			}
+		}
+
+		delete _number;
+		delete _pin;
 	}
 }
 
@@ -245,7 +255,7 @@ std::string Atm::readCardNumber() const
 	std::string number;
 	bool condition = _validator.validateCardNumber(number);
 	while (!condition) {
-		_ui.show("print card number: ");
+		_ui.show("enter card number: ");
 		number = _ui.read();
 		condition = _validator.validateCardNumber(number);
 		if (!condition) {
@@ -315,5 +325,5 @@ bool isNumber(char c)
 bool isCommand(const char c)
 {
 	int n = c - '0';
-	return n >= 0 && n <= 5;
+	return n >= 0 && n <= 6;
 }

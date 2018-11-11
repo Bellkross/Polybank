@@ -9,8 +9,8 @@ Server::~Server() {}
 
 std::string Server::fetchAccountName(const CardNumber& card, const Pin& pin)
 {
+	assert(checkCredentials(card, pin));
 	Account& a = _storage.account(card);
-	assert(a.pin() == pin);
 	Person ow = a.owner();
 	std::ostringstream stream;
 	stream << ow._surname << ' ' << ow._name << ' ' << ow._patronymic;
@@ -19,41 +19,49 @@ std::string Server::fetchAccountName(const CardNumber& card, const Pin& pin)
 
 bool Server::checkCredentials(const CardNumber& card, const Pin& pin)
 {
-	Account& a = _storage.account(card);
-	return a.pin() == pin;
+	try {
+		Account& a = _storage.account(card);
+		return a.pin() == pin;
+	} catch (std::exception&) {
+		return false;
+	}
 }
 
 Currency Server::balance(const CardNumber& card, const Pin& pin)
 {
+	assert(checkCredentials(card, pin));
 	Account& a = _storage.account(card);
-	assert(a.pin() == pin);
 	return a.balance();
 }
 
 bool Server::withdraw(const CardNumber& card, const Pin& pin, const Currency& amount)
 {
+	assert(checkCredentials(card, pin));
 	Account& a = _storage.account(card);
-	assert(a.pin() == pin);
 	return a.withdraw(amount);
 }
 
 bool Server::deposit(const CardNumber& card, const Pin& pin, const Currency& amount)
 {
+	assert(checkCredentials(card, pin));
 	Account& a = _storage.account(card);
-	assert(a.pin() == pin);
 	return a.deposit(amount);
 }
 
 bool Server::transact(const CardNumber& recipientCard, const Currency& amount)
 {
-	return _storage.account(recipientCard).deposit(amount);
+	try {
+		return _storage.account(recipientCard).deposit(amount);
+	} catch (std::exception&) {
+		return false;
+	}
 }
 
 bool Server::transact(const CardNumber& senderCard, const Pin& senderPin, 
 	const CardNumber& recipientCard, const Currency& amount)
 {
+	assert(checkCredentials(senderCard, senderPin));
 	Account& as = _storage.account(senderCard);
-	assert(as.pin() == senderPin);
 	if (!as.withdraw(amount)) {
 		return false;
 	}
