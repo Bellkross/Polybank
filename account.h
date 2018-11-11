@@ -13,6 +13,8 @@ class Account
 public:
 	Account(const CardNumber& card, const Pin& pin, 
 			const Currency& balance, const Person& owner);
+	Account(const Account&);
+	Account& operator=(const Account&);
 	~Account();
 
 	const	CardNumber& card() const;
@@ -34,10 +36,14 @@ private:
 	bool _occupied;
 
 	void wait() const;
-
-	/* Account replication is forbidden */
-	Account(const Account&);
-	Account& operator=(const Account&);
 };
+
+bool operator==(const Account&, const Account&);
+bool operator!=(const Account&, const Account&);
+
+bool operator<(const Account&, const Account&);
+bool operator>(const Account&, const Account&);
+bool operator<=(const Account&, const Account&);
+bool operator>=(const Account&, const Account&);
 
 #endif // ACCOUNT_H_

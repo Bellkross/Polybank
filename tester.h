@@ -8,6 +8,8 @@
 #include "atm.h"
 #include "currency.h"
 #include "account.h"
+#include "storage.h"
+
 
 #include <iostream>
 #include <fstream>
@@ -49,6 +51,8 @@ private:
 	bool currencyMathTest();
 
 	void accountTests();
+	void storageTests();
+  
 	void pocketsTests();
 	bool pocketsEmptynessTest();
 };
@@ -68,10 +72,46 @@ void Tester::run()
 	atmTests();
 	currencyTests();
 	accountTests();
-	pocketsTests();
+  storageTests();
+  pocketsTests();
 }
 
-void Tester::accountTests() {
+void Tester::storageTests() 
+{
+	Person ow;
+	ow._patronymic = "Shlepakova";
+	ow._name = "Polina";
+	ow._patronymic = "Dmytrivna";
+
+	CardNumber cn1("1234567890123456");
+	CardNumber cn2("1111111111111111");
+	Pin p1("1234");
+	Pin p2("0000");
+	Currency b(1000, 25);
+	Currency c = b + b;
+
+	bool res = true;
+	Storage s;
+	s.addAccount(Account(cn1, p1, b, ow));
+	res == s.hasAccount(cn1) && res;
+	res == !s.hasAccount(cn2) && res;
+	try {
+		s.account(cn2);
+		res = false;
+	} catch (std::invalid_argument&) {}
+	res = s.account(cn1).pin() == p1 && res;
+	res = s.account(cn1).balance() == b && res;
+	res = s.account(cn1).owner()._surname == ow._surname && res;
+	s.account(cn1).withdraw(b);
+	res = s.account(cn1).balance() == Currency(0) && res;
+	s.account(cn1).deposit(c);
+	res = s.account(cn1).balance() == c && res;
+
+	showTestResult(res, "storage tests");
+}
+
+void Tester::accountTests() 
+{
 	Person ow;
 	ow._patronymic = "Shlepakova";
 	ow._name = "Polina";

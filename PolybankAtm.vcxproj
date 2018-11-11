@@ -82,6 +82,7 @@
     <ClCompile Include="pin.cpp" />
     <ClCompile Include="pockets.cpp" />
     <ClCompile Include="server_access_layer.cpp" />
+    <ClCompile Include="storage.cpp" />
     <ClCompile Include="user_interface.cpp" />
     <ClCompile Include="validator.cpp" />
   </ItemGroup>
@@ -94,6 +95,7 @@
     <ClInclude Include="person.h" />
     <ClInclude Include="pin.h" />
     <ClInclude Include="server_access_layer.h" />
+    <ClInclude Include="storage.h" />
     <ClInclude Include="tester.h" />
     <ClInclude Include="validator.h" />
   </ItemGroup>
