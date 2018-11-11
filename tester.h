@@ -9,13 +9,14 @@
 #include "currency.h"
 #include "account.h"
 #include "storage.h"
-
+#include "server.h"
 
 #include <iostream>
 #include <fstream>
 #include <exception>
 #include <cassert>
 #include <vector>
+#include <sstream>
 
 class Tester {
 public:
@@ -52,6 +53,7 @@ private:
 
 	void accountTests();
 	void storageTests();
+	void serverTests();
   
 	void pocketsTests();
 	bool pocketsEmptynessTest();
@@ -72,8 +74,51 @@ void Tester::run()
 	atmTests();
 	currencyTests();
 	accountTests();
-  storageTests();
-  pocketsTests();
+	storageTests();
+	pocketsTests();
+	serverTests();
+}
+
+void Tester::serverTests()
+{
+	CardNumber cn1("4900123411110000");
+	CardNumber cn2("4900432100005555");
+	Pin p1("1234");
+	Pin p2("0123");
+	Pin incorrect("9999");
+	Currency wd1(200);
+	Currency wd1Big(2000000);
+	Currency dp1(50000);
+	Currency tr1To2(500);
+	Currency trTo2(700);
+
+	Storage st;
+	Server ser(st);
+	bool res = true;
+	res = ser.checkCredentials(cn1, p1) && res;
+	res = !ser.checkCredentials(cn1, incorrect) && res;
+	
+	Currency b1(ser.balance(cn1, p1));
+	Currency b2(ser.balance(cn2, p2));
+	res = ser.withdraw(cn1, p1, wd1) && res;
+	res = ser.balance(cn1, p1) == (b1 - wd1) && res;
+	b1 = ser.balance(cn1, p1);
+	res = !ser.withdraw(cn1, p1, wd1Big) && res;
+	res = b1 == ser.balance(cn1, p1) && res;
+	
+	res = ser.deposit(cn1, p1, dp1) && res;
+	res = ser.balance(cn1, p1) == (b1 + dp1) && res;
+	b1 = ser.balance(cn1, p1);
+	
+	res = ser.transact(cn1, p1, cn2, tr1To2) && res;
+	res = ser.balance(cn1, p1) == (b1 - tr1To2) && res;
+	res = ser.balance(cn2, p2) == (b2 + tr1To2) && res;
+	b1 = ser.balance(cn1, p1);
+	b2 = ser.balance(cn2, p2);
+	res = ser.transact(cn2, trTo2) && res;
+	res = ser.balance(cn2, p2) == (b2 + trTo2) && res;
+
+	showTestResult(res, "server tests");
 }
 
 void Tester::storageTests() 
@@ -238,15 +283,11 @@ void Tester::currencyTests()
 	int units[nUnits] = {0, 10};
 	const size_t nFractions = 5;
 	int fractions[nFractions] = {30, 99, 100, 123, 789};
-	bool res = false;
 	for (size_t u = 0; u < nUnits; ++u) {
 		for (size_t f = 0; f < nFractions; ++f) {
-			res = currencyTest(units[u], fractions[f]);
-#ifndef NDEBUG
-			std::cout << (res ? "[passed]" : "[failed]") << " currencyTest with " << 
-				units[u] << '.' << fractions[f] << std::endl;
-#endif // NDEBUG
-			assert(res);
+			std::ostringstream stream;
+			stream << "currency test with " << units[u] << '.' << fractions[f];
+			showTestResult(currencyTest(units[u], fractions[f]), stream.str());
 		}
 	}
 
