@@ -4,8 +4,8 @@
 #include "person.h"
 #include "pin.h"
 
-Atm::Atm(std::istream& in, std::ostream& out): 
-	_ui(in, out), _validator(), _serverAccessLayer(new ServerAccessLayer()), 
+Atm::Atm(std::istream& in, std::ostream& out, Server& server): 
+	_ui(in, out), _validator(), _serverAccessLayer(new ServerAccessLayer(server)), 
 	_number(0), _pin(0), kAttempts(3), kTransactionLowBoundary(5.0), kTransactionHighBoundary(200000.0)
 {
 	// address initialization
@@ -25,20 +25,12 @@ Atm::~Atm()
 void Atm::run()
 {
 	_ui.clear();
-#ifdef NDEBUG
 	_ui.greeting();
 	_getch();
 	_ui.clear();
-#endif // NDEBUG
 
-#ifndef NDEBUG
-	_number = new CardNumber("1234567890123456");
-	_pin = new Pin("1234");
-#endif // NDEBUG
-#ifdef NDEBUG
 	_number = new CardNumber(readCardNumber());
 	_pin = new Pin(readPin());
-#endif // NDEBUG
 
 	bool credentials = _serverAccessLayer->checkCredentials(*_number, *_pin);
 	size_t atmpts = kAttempts;
@@ -89,12 +81,7 @@ void Atm::run()
 
 void Atm::transaction() const
 {
-#ifndef NDEBUG
-	CardNumber number("1234567890123456");
-#endif // NDEBUG
-#ifdef NDEBUG
 	CardNumber number = CardNumber(readCardNumber());
-#endif // NDEBUG
 	Currency balance = _serverAccessLayer->balance(*_number, *_pin);
 	if(balance.unit() == 0) {
 		_ui.show("You cannot send money, your balance is empty.");
@@ -103,11 +90,11 @@ void Atm::transaction() const
 	}
 	if(_serverAccessLayer->transact(*_number, *_pin, number, readAmountForTransaction(balance))) {
 		_ui.clear();
-		_ui.show("Transaction finished. Press ENTER to back to the menu.");
+		_ui.show("Transaction finished. Press ENTER to return to the menu.");
 		_getch();
 	} else {
 		_ui.clear();
-		_ui.show("Transaction failed. Press ENTER to back to the menu.");
+		_ui.show("Transaction failed. Press ENTER to return to the menu.");
 		_getch();
 	}
 }
@@ -148,11 +135,11 @@ void Atm::depositToAnotherBill() const
 	if(_serverAccessLayer->transact(*_number,curr)) {
 		_pockets.deposit(curr.unit());
 		_ui.clear();
-		_ui.show("Deposit finished. Press ENTER to back to the menu.");
+		_ui.show("Deposit finished. Press ENTER to return to the menu.");
 		_getch();
 	} else {
 		_ui.clear();
-		_ui.show("Deposit failed. Press ENTER to back to the menu.");
+		_ui.show("Deposit failed. Press ENTER to return to the menu.");
 		_getch();
 	}
 }
@@ -168,11 +155,11 @@ void Atm::deposit() const
 	if(_serverAccessLayer->deposit(*_number,*_pin,curr)) {
 		_pockets.deposit(curr.unit());
 		_ui.clear();
-		_ui.show("Deposit finished. Press ENTER to back to the menu.");
+		_ui.show("Deposit finished. Press ENTER to return to the menu.");
 		_getch();
 	} else {
 		_ui.clear();
-		_ui.show("Deposit failed. Press ENTER to back to the menu.");
+		_ui.show("Deposit failed. Press ENTER to return to the menu.");
 		_getch();
 	}
 }
@@ -189,11 +176,11 @@ void Atm::withdraw() const
 	if(_serverAccessLayer->withdraw(*_number,*_pin,curr)) {
 		_pockets.withdraw(curr.unit());
 		_ui.clear();
-		_ui.show("You can take your money. Press ENTER to back to the menu.");
+		_ui.show("You can take your money. Press ENTER to return to the menu.");
 		_getch();
 	} else {
 		_ui.clear();
-		_ui.show("Operation failed. Press ENTER to back to the menu.");
+		_ui.show("Operation failed. Press ENTER to return to the menu.");
 		_getch();
 	}
 }
@@ -206,7 +193,7 @@ void Atm::balance() const
 	stream << name << ", your balance: " << balance << " grn." << std::endl;
 	_ui.clear();
 	_ui.show(stream.str());
-	_ui.show("Press ENTER to back to the menu.");
+	_ui.show("Press ENTER to return to the menu.");
 	_getch();
 }
 

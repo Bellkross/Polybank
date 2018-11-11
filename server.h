@@ -11,7 +11,7 @@
 class Server 
 {
 public:
-	Server(Storage&);
+	explicit Server(Storage&);
 	~Server();
 
 	std::string fetchAccountName(const CardNumber& card, const Pin& pin);
