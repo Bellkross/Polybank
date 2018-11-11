@@ -3,7 +3,6 @@
   */
 #include <iostream>
 #include "tester.h"
-#define NDEBUG
 
 int main()
 {
