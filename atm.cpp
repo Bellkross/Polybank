@@ -3,7 +3,6 @@
 #include "card_number.h"
 #include "person.h"
 #include "pin.h"
-#include <sstream> 
 
 Atm::Atm(std::istream& in, std::ostream& out): 
 	_ui(in, out), _validator(), _serverAccessLayer(new ServerAccessLayer()), 
@@ -73,12 +72,35 @@ void Atm::run()
 			case DEPOSIT:
 				deposit();
 				break;
+			case DEPOSIT_TO_ANOTHER_BILL:
+				depositToAnotherBill();
+				break;
 			case TRANSACTION:
 				break;
 			default: // QUIT
 				return;
-				break;
 		}
+	}
+}
+
+void Atm::depositToAnotherBill() const 
+{
+	if(_pockets.isFull() || _pockets.maxDeposit() == 0) {
+		_ui.show("Sorry, but you cannot deposit money, try again later.");
+		_getch();
+		return;
+	}
+	CardNumber number = CardNumber(readCardNumber());
+	Currency curr(readAmountForAtm(_pockets.maxDeposit()));
+	if(_serverAccessLayer->transact(*_number,curr)) {
+		_pockets.deposit(curr.unit());
+		_ui.clear();
+		_ui.show("Deposit finished. Press ENTER to back to the menu.");
+		_getch();
+	} else {
+		_ui.clear();
+		_ui.show("Deposit failed. Press ENTER to back to the menu.");
+		_getch();
 	}
 }
 
@@ -94,6 +116,10 @@ void Atm::deposit() const
 		_pockets.deposit(curr.unit());
 		_ui.clear();
 		_ui.show("Deposit finished. Press ENTER to back to the menu.");
+		_getch();
+	} else {
+		_ui.clear();
+		_ui.show("Deposit failed. Press ENTER to back to the menu.");
 		_getch();
 	}
 }
@@ -111,6 +137,10 @@ void Atm::withdraw() const
 		_pockets.withdraw(curr.unit());
 		_ui.clear();
 		_ui.show("You can take your money. Press ENTER to back to the menu.");
+		_getch();
+	} else {
+		_ui.clear();
+		_ui.show("Operation failed. Press ENTER to back to the menu.");
 		_getch();
 	}
 }
@@ -224,5 +254,5 @@ bool isNumber(char c)
 bool isCommand(const char c)
 {
 	int n = c - '0';
-	return n >= 0 && n <= 4;
+	return n >= 0 && n <= 5;
 }

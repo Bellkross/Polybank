@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <conio.h> // for getch
+#include <sstream> 
 #include "validator.h"
 #include "address.h"
 
@@ -69,7 +70,8 @@ private:
 		BALANCE=1,
 		WITHDRAW=2,
 		DEPOSIT=3,
-		TRANSACTION=4
+		DEPOSIT_TO_ANOTHER_BILL=4,
+		TRANSACTION=5,
 	};
 	
 	const size_t _attempts;
@@ -85,6 +87,7 @@ private:
 	void balance() const;
 	void withdraw() const;
 	void deposit() const;
+	void depositToAnotherBill() const;
 
 	size_t readAmountForAtm(const size_t) const;
 	std::string readCardNumber() const;
