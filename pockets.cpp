@@ -1,27 +1,10 @@
 #include "atm.h"
+#include <algorithm>
 
-Atm::Pockets::Pockets(): kLen(3), kCount(500), _arr(new size_t[3])
+Atm::Pockets::Pockets(): kLen(3), kCount(500), kMaxDepositCount(500*5), _capacity(0), _arr(new size_t[3])
 {
 	for(size_t i = 0; i < kLen; ++i) {
 		_arr[i] = kCount;
-	}
-}
-
-void Atm::Pockets::withdraw(const size_t amount) {
-	size_t amnt = amount;
-	while(amnt != 0 && max() > 0) {
-		if(amnt >= 500 && _arr[2] > 0) {
-			amnt -= 500;
-			--_arr[2];
-		}
-		if(amnt >= 200 && _arr[1] > 0) {
-			amnt -= 200;
-			--_arr[1];
-		}
-		if(amnt >= 100 && _arr[0] > 0) {
-			amnt -= 100;
-			--_arr[0];
-		}
 	}
 }
 
@@ -36,6 +19,25 @@ bool Atm::Pockets::isEmpty() const {
 	return true;
 }
 
+bool Atm::Pockets::isFull() const {
+	return _capacity >= kMaxDepositCount;
+}
+
+size_t Atm::Pockets::maxDeposit() const
+{
+	if(isFull() || _capacity >= kMaxDepositCount) return 0;
+	return (kMaxDepositCount - _capacity)*banknote(0);
+}
+
+void Atm::Pockets::deposit(const size_t amount)
+{
+	size_t amnt = amount;
+	while(amnt != 0 && maxDeposit() > 0 && amnt < maxDeposit()) {
+		amnt -= banknote(0);
+		++_capacity;
+	}
+}
+
 size_t Atm::Pockets::max() const 
 {
 	if(isEmpty() || _arr[0] < 1) return 0;
@@ -46,6 +48,24 @@ size_t Atm::Pockets::max() const
 		return sum(kLen-1);
 	}
 	return 0;
+}
+
+void Atm::Pockets::withdraw(const size_t amount) {
+	size_t amnt = amount;
+	while(amnt != 0 && max() > 0) {
+		if(amnt >= banknote(2) && _arr[2] > 0) {
+			amnt -= banknote(2);
+			--_arr[2];
+		}
+		if(amnt >= banknote(1) && _arr[1] > 0) {
+			amnt -= banknote(1);
+			--_arr[1];
+		}
+		if(amnt >= banknote(0) && _arr[0] > 0) {
+			amnt -= banknote(0);
+			--_arr[0];
+		}
+	}
 }
 
 size_t Atm::Pockets::sum(const size_t hi) const

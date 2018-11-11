@@ -62,6 +62,7 @@ void Atm::run()
 		_ui.maintance();
 		command = readCommand();
 		_ui.clear();
+		_ui.read(); // skip one line
 		switch(command) {
 			case BALANCE:
 				balance();
@@ -69,9 +70,10 @@ void Atm::run()
 			case WITHDRAW:
 				withdraw();
 				break;
-			case SEND:
+			case DEPOSIT:
+				deposit();
 				break;
-			case PUT_CASH:
+			case TRANSACTION:
 				break;
 			default: // QUIT
 				return;
@@ -80,16 +82,31 @@ void Atm::run()
 	}
 }
 
+void Atm::deposit() const
+{
+	if(_pockets.isFull() || _pockets.maxDeposit() == 0) {
+		_ui.show("Sorry, but you cannot deposit money, try again later.");
+		_getch();
+		return;
+	}
+	Currency curr(readAmountForAtm(_pockets.maxDeposit()));
+	if(_serverAccessLayer->deposit(*_number,*_pin,curr)) {
+		_pockets.deposit(curr.unit());
+		_ui.clear();
+		_ui.show("Deposit finished. Press ENTER to back to the menu.");
+		_getch();
+	}
+}
+
 void Atm::withdraw() const
 {
-	if(_pockets.isEmpty()) {
-		_ui.show("Sorry, but atm is empty, try again later.");
+	if(_pockets.isEmpty() || _pockets.max() == 0) {
+		_ui.show("Sorry, but you cannot withdraw money, try again later.");
 		_getch();
 		return;
 	}
 	Currency balance = _serverAccessLayer->balance(*_number, *_pin);
-	_ui.read(); // skip one line
-	Currency curr(readAmountForAtm());
+	Currency curr(readAmountForAtm(_pockets.max()));
 	if(_serverAccessLayer->withdraw(*_number,*_pin,curr)) {
 		_pockets.withdraw(curr.unit());
 		_ui.clear();
@@ -110,11 +127,10 @@ void Atm::balance() const
 	_getch();
 }
 
-size_t Atm::readAmountForAtm() const
+size_t Atm::readAmountForAtm(const size_t max) const
 {
-	size_t max = _pockets.max();
 	std::ostringstream stream;
-	stream << "Type amount of money to withdraw that is divisible by 100 and no bigger than " << max << '\n';
+	stream << "Type amount of money that is divisible by 100 and no bigger than " << max << '\n';
 	stream << "amount: ";
 	int amount = -1;
 	while(amount < 0) {

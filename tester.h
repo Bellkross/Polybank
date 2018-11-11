@@ -10,7 +10,6 @@
 #include "account.h"
 #include "storage.h"
 
-
 #include <iostream>
 #include <fstream>
 #include <exception>
@@ -55,6 +54,7 @@ private:
   
 	void pocketsTests();
 	bool pocketsEmptynessTest();
+	bool pocketsDepositTest();
 };
 
 void Tester::manualTest()
@@ -72,8 +72,8 @@ void Tester::run()
 	atmTests();
 	currencyTests();
 	accountTests();
-  storageTests();
-  pocketsTests();
+	storageTests();
+	pocketsTests();
 }
 
 void Tester::storageTests() 
@@ -155,6 +155,38 @@ void Tester::pocketsTests()
 	std::cout << (result ? "[passed]" : "[failed]") << " pocketsEmptynessTest" << std::endl;
 	assert(result);
 #endif // NDEBUG
+#ifndef NDEBUG
+	result = pocketsDepositTest();
+	std::cout << (result ? "[passed]" : "[failed]") << " pocketsDepositTest" << std::endl;
+	assert(result);
+#endif // NDEBUG
+}
+
+bool Tester::pocketsDepositTest()
+{
+	// we don't need chech values > 250 000, because of atm input values protetion
+	for(int i = 0; i < 250; ++i) {
+		Atm::Pockets p;
+		int value = (i+1)*1000;
+		int j = value;
+		p.deposit(p.maxDeposit()-j);
+		for(; j > 0; j -= value/10, p.deposit(value/10))
+		{
+			if(j != 0 && p.isFull() || p.maxDeposit() != j) return false;
+			if(j == 0 && (!p.isFull() || p.maxDeposit() != 0)) return false;
+		}
+	}
+	// but we have protection from forbidden falues
+	Atm::Pockets p;
+	size_t md = p.maxDeposit();
+	p.deposit(md+1);
+	if(p.isFull() || p.maxDeposit() != md || p._capacity != 0) return false;
+	p.deposit(0);
+	if(p.isFull() || p.maxDeposit() != md || p._capacity != 0) return false;
+	p.deposit(-1);
+	if(p.isFull() || p.maxDeposit() != md || p._capacity != 0) return false;
+
+	return true;
 }
 
 bool Tester::pocketsEmptynessTest()

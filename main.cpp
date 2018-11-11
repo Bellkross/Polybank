@@ -8,6 +8,7 @@ int main()
 {
 	Tester tester;
 	tester.run();
+	// uncomment if you wish try manual test
 	// tester.manualTest();
 	return 0;
 }
