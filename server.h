@@ -1,3 +1,7 @@
+/*****************************
+ * Author: Polina Shlepakova *
+ *****************************/
+
 #ifndef SERVER_H_
 #define SERVER_H_
 

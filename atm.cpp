@@ -1,3 +1,7 @@
+/****************************
+ * Author: Vasylenko Kyrylo *
+ ****************************/
+
 #include "atm.h"
 #include "server_access_layer.h"
 #include "card_number.h"

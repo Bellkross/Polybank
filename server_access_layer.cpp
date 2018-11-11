@@ -1,3 +1,7 @@
+/****************************
+ * Author: Vasylenko Kyrylo *
+ ****************************/
+
 #include "server_access_layer.h"
 #include "server.h"
 

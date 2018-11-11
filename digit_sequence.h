@@ -1,3 +1,7 @@
+/****************************
+ * Author: Vasylenko Kyrylo *
+ ****************************/
+
 #ifndef DIGIT_SEQUENCE_H_
 #define DIGIT_SEQUENCE_H_
 #include <exception>

@@ -1,3 +1,7 @@
+/*****************************
+ * Author: Polina Shlepakova *
+ *****************************/
+
 #include "storage.h"
 
 Storage::Storage(): _accounts()

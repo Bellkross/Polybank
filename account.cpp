@@ -1,3 +1,7 @@
+/*****************************
+ * Author: Polina Shlepakova *
+ *****************************/
+
 #include "account.h"
 
 Account::Account(const CardNumber& card, const Pin& pin, 

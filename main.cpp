@@ -1,6 +1,6 @@
-/**
-  * Polybank: Polina Shlepakova and Vasylenko Kyrylo project
-  */
+/************************************************************
+ * Polybank: Polina Shlepakova and Vasylenko Kyrylo project *
+ ************************************************************/
 #include <iostream>
 #include "tester.h"
 
@@ -9,11 +9,9 @@ int main()
 #ifndef NDEBUG
 	Tester tester;
 	tester.run();
-	// uncomment if you wish to try manual test
-	// tester.manualTest();
 	return 0;
 #endif // NDEBUG
-#ifdef NDEBUG
+#ifdef NDEBUG // turn release mode if you wish to try manual test
 	Storage st;
 	Server server(st);
 	Atm atm(std::cin, std::cout, server);

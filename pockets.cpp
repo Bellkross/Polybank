@@ -1,3 +1,7 @@
+/****************************
+ * Author: Vasylenko Kyrylo *
+ ****************************/
+
 #include "atm.h"
 
 Atm::Pockets::Pockets(): kLen(3), kCount(500), kMaxDepositCount(500*5), _capacity(0), _arr(new size_t[3])

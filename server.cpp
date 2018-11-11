@@ -1,3 +1,7 @@
+/*****************************
+ * Author: Polina Shlepakova *
+ *****************************/
+
 #include "server.h"
 
 #include <sstream>

@@ -1,3 +1,7 @@
+/************************************************
+ * Authors: Polina Shlepakova, Vasylenko Kyrylo *
+ ************************************************/
+
 #ifndef TESTER_H_
 #define TESTER_H_
 #include "server_access_layer.h"
@@ -493,7 +497,9 @@ void Tester::digitSequenceTests()
 		digitSequenceTest<100>() 
 	};
 	for (int i = 0; i < testCasesNumber; ++i) {
-		showTestResult(results[i], "digitSequenceTest " + (i+1));
+		std::ostringstream stream;
+		stream << "digitSequenceTest " << (i+1);
+		showTestResult(results[i], stream.str());
 	}
 }
 

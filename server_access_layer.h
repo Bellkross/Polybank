@@ -1,3 +1,7 @@
+/****************************
+ * Author: Vasylenko Kyrylo *
+ ****************************/
+
 #ifndef SERVER_ACCESS_LAYER_H_
 #define SERVER_ACCESS_LAYER_H_
 #include <string>

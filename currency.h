@@ -1,3 +1,7 @@
+/*****************************
+ * Author: Polina Shlepakova *
+ *****************************/
+
 #ifndef CURRENCY_H_
 #define CURRENCY_H_
 #include <exception>

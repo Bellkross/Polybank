@@ -1,3 +1,7 @@
+/****************************
+ * Author: Vasylenko Kyrylo *
+ ****************************/
+
 #ifndef VALIDATOR_H_
 #define VALIDATOR_H_
 #include "card_number.h"

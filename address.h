@@ -1,3 +1,7 @@
+/****************************
+ * Author: Vasylenko Kyrylo *
+ ****************************/
+
 #ifndef ADDRESS_H_
 #define ADDRESS_H_
 #include <string>

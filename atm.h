@@ -1,3 +1,7 @@
+/****************************
+ * Author: Vasylenko Kyrylo *
+ ****************************/
+
 #ifndef ATM_H_
 #define ATM_H_
 #include <iostream>

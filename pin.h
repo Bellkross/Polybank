@@ -1,3 +1,7 @@
+/****************************
+ * Author: Vasylenko Kyrylo *
+ ****************************/
+
 #ifndef PIN_H_
 #define PIN_H_
 #include "digit_sequence.h"

@@ -1,1 +1,1 @@
-print card number: 
+enter card number: 

@@ -1,3 +1,7 @@
+/****************************
+ * Author: Vasylenko Kyrylo *
+ ****************************/
+
 #ifndef CARD_NUMBER_H_
 #define CARD_NUMBER_H_
 #include "digit_sequence.h"

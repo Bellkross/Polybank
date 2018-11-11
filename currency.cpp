@@ -1,3 +1,7 @@
+/*****************************
+ * Author: Polina Shlepakova *
+ *****************************/
+
 #include "currency.h"
 
 const unsigned int Currency::kFractionsInUnit = 100;

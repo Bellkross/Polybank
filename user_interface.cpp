@@ -1,3 +1,7 @@
+/****************************
+ * Author: Vasylenko Kyrylo *
+ ****************************/
+
 #include "atm.h"
 #define cardlen 16
 #define pinlen 4

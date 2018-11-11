@@ -1,3 +1,7 @@
+/*****************************
+ * Author: Polina Shlepakova *
+ *****************************/
+
 #ifndef STORAGE_H_
 #define STORAGE_H_
 
