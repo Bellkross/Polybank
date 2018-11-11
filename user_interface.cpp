@@ -33,8 +33,16 @@ void Atm::UserInterface::greeting() const
 
 void Atm::UserInterface::maintance() const
 {
-	std::string maintance = "Choose a command:\n1. Balance\n2. Withdraw cash\n3. Perform transaction\n4. Deposit cash\n\n0. Finish session\n\ncommand: ";
-	show(maintance);
+	std::ostringstream stream;
+	stream << "Choose a command:\n";
+	stream << "1. Balance\n";
+	stream << "2. Withdraw cash\n";
+	stream << "3. Deposit cash\n";
+	stream << "4. Deposit cash to another bill\n";
+	stream << "5. Perform transaction\n\n";
+	stream << "0. Finish session\n\n";
+	stream << "Choose a command: ";
+	show(stream.str());
 }
 
 void Atm::UserInterface::clear() const

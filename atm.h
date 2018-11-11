@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 #include <conio.h> // for getch
+#include <sstream> 
+#include "currency.h"
 #include "validator.h"
 #include "address.h"
 
@@ -25,13 +27,18 @@ private:
 	public:
 		Pockets();
 		~Pockets();
+		bool isFull() const;
 		bool isEmpty() const;
 		size_t max() const; // maximum amount of cash that Atm can fetch from pockets
 		void withdraw(const size_t);
+		size_t maxDeposit() const; // maximum amount of cash that Atm can put into pockets
+		void deposit(const size_t);
 	private:
 		size_t* _arr; // (map) index - pocket size
+		size_t _capacity; // pocket size for input
 		const size_t kLen; // pockets count
 		const size_t kCount; // count of banknotes in each pocket
+		const size_t kMaxDepositCount; // max count of banknotes in each pocket
 
 		size_t banknote(const size_t index) const; // returns banknote value by index (0 - 100), (1 - 200), (2 - 500)
 		size_t sum(const size_t hi) const; // auxiliary method for max
@@ -63,11 +70,14 @@ private:
 		QUIT=0,
 		BALANCE=1,
 		WITHDRAW=2,
-		SEND=3,
-		PUT_CASH=4
+		DEPOSIT=3,
+		DEPOSIT_TO_ANOTHER_BILL=4,
+		TRANSACTION=5,
 	};
 	
-	const size_t _attempts;
+	const size_t kAttempts;
+	const double kTransactionLowBoundary;
+	const double kTransactionHighBoundary;
 
 	mutable Pockets _pockets;
 	Address _address;
@@ -79,8 +89,12 @@ private:
 
 	void balance() const;
 	void withdraw() const;
+	void deposit() const;
+	void depositToAnotherBill() const;
+	void transaction() const;
 
-	size_t readAmountForAtm() const;
+	Currency readAmountForTransaction(const Currency& balance) const;
+	size_t readAmountForAtm(const size_t) const;
 	std::string readCardNumber() const;
 	std::string readPin() const;
 	int readCommand() const;
@@ -91,6 +105,7 @@ private:
 	Atm& operator=(const Atm&);
 };
 
+bool isCurrencyNumbers(const std::string&);
 bool isNumbers(const std::string&);
 bool isNumber(char);
 bool isCommand(const char);
