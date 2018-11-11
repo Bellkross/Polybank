@@ -150,16 +150,8 @@ void Tester::accountTests()
 
 void Tester::pocketsTests() 
 {
-#ifndef NDEBUG
-	bool result = pocketsEmptynessTest();
-	std::cout << (result ? "[passed]" : "[failed]") << " pocketsEmptynessTest" << std::endl;
-	assert(result);
-#endif // NDEBUG
-#ifndef NDEBUG
-	result = pocketsDepositTest();
-	std::cout << (result ? "[passed]" : "[failed]") << " pocketsDepositTest" << std::endl;
-	assert(result);
-#endif // NDEBUG
+	showTestResult(pocketsEmptynessTest(), "pocketsEmptynessTest");
+	showTestResult(pocketsDepositTest(), "pocketsDepositTest");
 }
 
 bool Tester::pocketsDepositTest()
@@ -225,11 +217,7 @@ bool Tester::pocketsEmptynessTest()
 
 void Tester::atmTests()
 {
-#ifndef NDEBUG
-	bool result = atmReadTest();
-	std::cout << (result ? "[passed]" : "[failed]") << " atmReadTest" << std::endl;
-	assert(result);
-#endif // NDEBUG
+	showTestResult(atmReadTest(), "atmReadTest");
 }
 
 bool Tester::atmReadTest()
@@ -424,11 +412,7 @@ void Tester::validatorTests()
 	v.push_back("0123456789012345");
 	v.push_back("Hello World!");
 	for (int i = v.size() - 1; i >= 0; --i) {
-#ifndef NDEBUG
-		bool result = validatorTest(v[i]);
-		std::cout << (result ? "[passed]" : "[failed]") << " validatorTest with " << v[i] << std::endl;
-		assert(result);
-#endif
+		showTestResult(validatorTest(v[i]), "validatorTest with " + v[i]);
 		v.pop_back();
 	}
 }
@@ -463,11 +447,7 @@ void Tester::digitSequenceTests()
 		digitSequenceTest<100>() 
 	};
 	for (int i = 0; i < testCasesNumber; ++i) {
-#ifndef NDEBUG
-		bool res = results[i];
-		std::cout << (res ? "[passed]" : "[failed]") << " digitSequenceTest " << i + 1 << std::endl;
-		assert(res);
-#endif // NDEBUG
+		showTestResult(results[i], "digitSequenceTest " + (i+1));
 	}
 }
 
@@ -667,12 +647,7 @@ bool Tester::digitSequenceTest()
 
 void Tester::cardNumberTests()
 {
-	bool result = true;
-	result = cardNumberTest();
-#ifndef NDEBUG
-	std::cout << (result ? "[passed]" : "[failed]") << " cardNumberTest" << std::endl;
-	assert(result);
-#endif // NDEBUG
+	showTestResult(cardNumberTest(), "cardNumberTest");
 }
 
 bool Tester::cardNumberTest()
@@ -744,12 +719,7 @@ bool Tester::cardNumberTest()
 
 void Tester::pinTests()
 {
-	bool result = true;
-	result = pinTest();
-#ifndef NDEBUG
-	std::cout << (result ? "[passed]" : "[failed]") << " pinTest" << std::endl;
-	assert(result);
-#endif // NDEBUG
+	showTestResult(pinTest(), "pinTest");
 }
 
 bool Tester::pinTest()
