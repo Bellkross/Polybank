@@ -39,8 +39,9 @@ void Atm::UserInterface::maintance() const
 	stream << "2. Withdraw cash\n";
 	stream << "3. Deposit cash\n";
 	stream << "4. Deposit cash to another bill\n";
-	stream << "5. Perform transaction\n\n";
-	stream << "0. Finish session\n\n";
+	stream << "5. Perform transaction\n";
+	stream << "6. Finish session\n\n";
+	stream << "0. Turn off atm\n\n";
 	stream << "Choose a command: ";
 	show(stream.str());
 }
