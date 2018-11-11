@@ -62,7 +62,9 @@ private:
 
 void Tester::manualTest()
 {
-	Atm atm(std::cin, std::cout);
+	Storage st;
+	Server ser(st);
+	Atm atm(std::cin, std::cout, ser);
 	atm.run();
 }
 
@@ -277,7 +279,9 @@ bool Tester::atmReadTest()
 		std::cout << "File opening or reading or closing exception while testing" << std::endl;
 		return false;
 	}
-	Atm atm(is, os);
+	Storage st;
+	Server ser(st);
+	Atm atm(is, os, ser);
 	try {
 		DigitSequence<16> ds(atm.readCardNumber());
 		CardNumber cn(ds);

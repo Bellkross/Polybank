@@ -5,11 +5,11 @@
 #include "card_number.h"
 #include "pin.h"
 
+class Server;
 class ServerAccessLayer 
 {
 public:
-	//ServerAccessLayer(const Server&);
-	ServerAccessLayer(); // make private after server appearing
+	explicit ServerAccessLayer(Server&);
 	~ServerAccessLayer();
 
 	std::string fetchAccountName(const CardNumber&, const Pin&);
@@ -21,7 +21,8 @@ public:
 	bool transact(const CardNumber&, const Pin&, const CardNumber&, const Currency&);
 
 private:
-	//const Server& _server;
+	Server& _server;
+	ServerAccessLayer();
 	ServerAccessLayer(const ServerAccessLayer&);
 	ServerAccessLayer& operator=(const ServerAccessLayer&);
 };

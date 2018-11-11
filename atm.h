@@ -10,12 +10,13 @@
 
 class CardNumber;
 class Pin;
+class Server;
 class ServerAccessLayer;
 class Atm
 {
 	friend class Tester;
 public:
-	Atm(std::istream&, std::ostream&);
+	Atm(std::istream&, std::ostream&, Server& server);
 	~Atm();
 
 	void run();
