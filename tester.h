@@ -10,7 +10,6 @@
 #include "account.h"
 #include "storage.h"
 
-
 #include <iostream>
 #include <fstream>
 #include <exception>
@@ -55,6 +54,7 @@ private:
   
 	void pocketsTests();
 	bool pocketsEmptynessTest();
+	bool pocketsDepositTest();
 };
 
 void Tester::manualTest()
@@ -72,8 +72,8 @@ void Tester::run()
 	atmTests();
 	currencyTests();
 	accountTests();
-  storageTests();
-  pocketsTests();
+	storageTests();
+	pocketsTests();
 }
 
 void Tester::storageTests() 
@@ -150,11 +150,35 @@ void Tester::accountTests()
 
 void Tester::pocketsTests() 
 {
-#ifndef NDEBUG
-	bool result = pocketsEmptynessTest();
-	std::cout << (result ? "[passed]" : "[failed]") << " pocketsEmptynessTest" << std::endl;
-	assert(result);
-#endif // NDEBUG
+	showTestResult(pocketsEmptynessTest(), "pocketsEmptynessTest");
+	showTestResult(pocketsDepositTest(), "pocketsDepositTest");
+}
+
+bool Tester::pocketsDepositTest()
+{
+	// we don't need chech values > 250 000, because of atm input values protetion
+	for(int i = 0; i < 250; ++i) {
+		Atm::Pockets p;
+		int value = (i+1)*1000;
+		int j = value;
+		p.deposit(p.maxDeposit()-j);
+		for(; j > 0; j -= value/10, p.deposit(value/10))
+		{
+			if(j != 0 && p.isFull() || p.maxDeposit() != j) return false;
+			if(j == 0 && (!p.isFull() || p.maxDeposit() != 0)) return false;
+		}
+	}
+	// but we have protection from forbidden falues
+	Atm::Pockets p;
+	size_t md = p.maxDeposit();
+	p.deposit(md+1);
+	if(p.isFull() || p.maxDeposit() != md || p._capacity != 0) return false;
+	p.deposit(0);
+	if(p.isFull() || p.maxDeposit() != md || p._capacity != 0) return false;
+	p.deposit(-1);
+	if(p.isFull() || p.maxDeposit() != md || p._capacity != 0) return false;
+
+	return true;
 }
 
 bool Tester::pocketsEmptynessTest()
@@ -193,11 +217,7 @@ bool Tester::pocketsEmptynessTest()
 
 void Tester::atmTests()
 {
-#ifndef NDEBUG
-	bool result = atmReadTest();
-	std::cout << (result ? "[passed]" : "[failed]") << " atmReadTest" << std::endl;
-	assert(result);
-#endif // NDEBUG
+	showTestResult(atmReadTest(), "atmReadTest");
 }
 
 bool Tester::atmReadTest()
@@ -392,11 +412,7 @@ void Tester::validatorTests()
 	v.push_back("0123456789012345");
 	v.push_back("Hello World!");
 	for (int i = v.size() - 1; i >= 0; --i) {
-#ifndef NDEBUG
-		bool result = validatorTest(v[i]);
-		std::cout << (result ? "[passed]" : "[failed]") << " validatorTest with " << v[i] << std::endl;
-		assert(result);
-#endif
+		showTestResult(validatorTest(v[i]), "validatorTest with " + v[i]);
 		v.pop_back();
 	}
 }
@@ -431,11 +447,7 @@ void Tester::digitSequenceTests()
 		digitSequenceTest<100>() 
 	};
 	for (int i = 0; i < testCasesNumber; ++i) {
-#ifndef NDEBUG
-		bool res = results[i];
-		std::cout << (res ? "[passed]" : "[failed]") << " digitSequenceTest " << i + 1 << std::endl;
-		assert(res);
-#endif // NDEBUG
+		showTestResult(results[i], "digitSequenceTest " + (i+1));
 	}
 }
 
@@ -635,12 +647,7 @@ bool Tester::digitSequenceTest()
 
 void Tester::cardNumberTests()
 {
-	bool result = true;
-	result = cardNumberTest();
-#ifndef NDEBUG
-	std::cout << (result ? "[passed]" : "[failed]") << " cardNumberTest" << std::endl;
-	assert(result);
-#endif // NDEBUG
+	showTestResult(cardNumberTest(), "cardNumberTest");
 }
 
 bool Tester::cardNumberTest()
@@ -712,12 +719,7 @@ bool Tester::cardNumberTest()
 
 void Tester::pinTests()
 {
-	bool result = true;
-	result = pinTest();
-#ifndef NDEBUG
-	std::cout << (result ? "[passed]" : "[failed]") << " pinTest" << std::endl;
-	assert(result);
-#endif // NDEBUG
+	showTestResult(pinTest(), "pinTest");
 }
 
 bool Tester::pinTest()
