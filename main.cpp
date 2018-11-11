@@ -8,7 +8,7 @@ int main()
 {
 	Tester tester;
 	tester.run();
-	// uncomment if you wish try manual test
+	// uncomment if you wish to try manual test
 	// tester.manualTest();
 	return 0;
 }
