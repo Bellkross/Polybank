@@ -277,7 +277,7 @@ std::string Atm::readPin() const
 	std::string pin;
 	bool condition = _validator.validatePin(pin);
 	while (!condition) {
-		_ui.show("print pin: ");
+		_ui.show("enter pin: ");
 		pin = _ui.read();
 		condition = _validator.validatePin(pin);
 		if (!condition) {
